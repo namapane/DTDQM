@@ -308,8 +308,8 @@ void DTTreeBuilder::analyze(const Event& event, const EventSetup& setup) {
 	  }
 	
 	  if (mustRefit) {
-	    refittedSegment4D.phiSegment()->update(updatedRecHits);	
-	    theUpdator->fit(&refittedSegment4D);
+	    refittedSegment4D.phiSegment()->update(updatedRecHits); // FIXME: added allow3par=false, is this what we want?
+	    theUpdator->fit(&refittedSegment4D, false);  // FIXME: added allow3par=false, is this what we want?
 	  }
 
 // 	  float ddir = (refittedSegment4D.localDirection()-(*segment4D).localDirection()).mag();
