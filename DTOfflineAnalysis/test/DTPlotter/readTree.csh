@@ -51,13 +51,20 @@
 #root -q -b 'readTree.r("~/work/DT/fillTree/prod/2012D_22jan13_noDRR_BP7X/chain.h", "ZMu_2012D_22jan13_noDRR_BP7X","statByView")'
 
 
-root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR/ZMu_2012D_22jan13_BP7X_noDRR","statByLayer")'
+#root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR/ZMu_2012D_22jan13_BP7X_noDRR","statByLayer")'
 
-root -q -b 'readTree.r("/data/DT/DYJetsToLL_M-50_BP7X_noDRR/chain.h", "/data/DT/DYJetsToLL_M-50_BP7X_noDRR/DYJetsToLL_M-50_BP7X_noDRR","statByLayer")'
-
-
-root -q -b 'readTree.r("/data/DT/DYJetsToLL_M-50_BP7X_noDRR_angleCorrv2/chain.h", "/data/DT/DYJetsToLL_M-50_BP7X_noDRR/DYJetsToLL_M-50_BP7X_noDRR_angleCorrv2","statByView")'
-
-root -q -b 'readTree.r("/data/DT/2012D_22jan13_PT-f06cd75/chain.h", "/data/DT/2012D_22jan13_PT-f06cd75/ZMu_2012D_22jan13_PT-f06cd75","statByView")'
+#root -q -b 'readTree.r("/data/DT/DYJetsToLL_M-50_BP7X_noDRR/chain.h", "/data/DT/DYJetsToLL_M-50_BP7X_noDRR/DYJetsToLL_M-50_BP7X_noDRR","statByLayer")'
 
 
+#root -q -b 'readTree.r("/data/DT/DYJetsToLL_M-50_BP7X_noDRR_angleCorrv2/chain.h", "/data/DT/DYJetsToLL_M-50_BP7X_noDRR/DYJetsToLL_M-50_BP7X_noDRR_angleCorrv2","statByView")'
+
+#root -q -b 'readTree.r("/data/DT/2012D_22jan13_PT-f06cd75/chain.h", "/data/DT/2012D_22jan13_PT-f06cd75/ZMu_2012D_22jan13_PT-f06cd75","statByView")'
+
+
+###
+
+root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr2","statByView")'
+root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr2","statByLayer")'
+
+root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr4/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr4","statByView")root -q -b '
+readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr4/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr4","statByLayer")'
