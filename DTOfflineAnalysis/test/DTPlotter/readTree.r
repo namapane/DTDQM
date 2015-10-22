@@ -22,9 +22,9 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TClonesArray.h"
-#include "root_lib/DTSegmentObject.h"
-#include "root_lib/DTHitObject.h"
-#include "root_lib/TTreeReader.h"
+// #include "root_lib/DTSegmentObject.h"
+// #include "root_lib/DTHitObject.h"
+#include "DQM/DTOfflineAnalysis/test/root_lib/TTreeReader.h"
 
 #include "TSystem.h"
 #include "TMath.h"
@@ -39,16 +39,20 @@ int NEVENTS = -1;
 int debug = 0;
 
 void readTree() {
-  cout << "run with:" << 
+  cout << "run with:"
        << ".x readTree.r(<input>,<outputRootFile>,GRANULARITY)" << endl;
 }
 
 
 void readTree(TString infile, string outputFile, string GRANULARITY="statByView") {
 
+  cout <<  TString(gSystem->GetLibraries()) << endl;
+  
   if (! TString(gSystem->GetLibraries()).Contains("libEvent.so")) {
+    cout << "LOADING " << endl;
     gSystem->Load("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/libEvent.so"); 
-  }
+  } 
+
   TChain c("DTSegmentTree");
 
   if (infile.EndsWith(".root")) { // single root file
@@ -62,7 +66,7 @@ void readTree(TString infile, string outputFile, string GRANULARITY="statByView"
 
   cout << c.GetEntries() << endl;
 
-  TTreeReader *reader = new TTreeReader(&c, outputFile);
+  dt::TTreeReader *reader = new dt::TTreeReader(&c, outputFile);
   if (GRANULARITY=="statByView") {
     reader->doStep1 = true; // also ake plots for step 1
   }

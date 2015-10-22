@@ -33,13 +33,16 @@ process.source = cms.Source("PoolSource",
 #    duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
 )
 
-process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-
+#process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+                              
 ################### Set input samples
 
 #execfile("files_ZMu-22Jan2013-v1.py")                                    # Data
-execfile("files_710pre4_RelVal_zMu2012D.py")                        # Data 71X
+#execfile("files_710pre4_RelVal_zMu2012D.py")                        # Data 71X
 #execfile("files_710pre5_RelVal_zMu2012D.py")                        # Data 71X
+execfile("files_ZMu-2012D-740p9.py")                                 # Data repro in 74X
 #execfile("files_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball.py")    # Z MC
 #execfile("files_RelValZMM5312.py")                                       # Z RelVal, 5X
 #execfile("files_RelValZMM700p4.py")                                      # Z RelVal, 7X

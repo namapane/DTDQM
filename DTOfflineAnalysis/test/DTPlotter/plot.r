@@ -7,12 +7,6 @@
 //
 //----------------------------------------------------------------------
 
-
-void plot(TString filename, int wheel, int station, int sector=0, int layer=0) {
-  plot(filename,"Cut1",wheel,station,sector,layer);
-}
-
-
 void plot(TString filename, TString cut, int wheel, int station, int sector=0, int layer=0) {
 
    if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
@@ -42,7 +36,6 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
   //----------------------------------------------------------------------
 
 
- 
   TStyle * style = getStyle("tdr");
   style->cd();
   gStyle->SetTitleSize(0.05,"XYZ"); // Set larger axis titles
@@ -57,6 +50,7 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
 
 
   TFile *file = new TFile(filename);
+  
 
   DTDetId detId1(wheel, station, sector, 1, layer, 0);
   DTDetId detId2(wheel, station, sector, 2, layer, 0);
@@ -116,6 +110,8 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
     float m_phi = fphi->GetParameter("Mean")*cmToMicron;
     float s_phi = fphi->GetParameter("Sigma")*cmToMicron;
 
+    float m_theta=0;
+    float s_theta =0;
     if (hResTheta->hResDist) {
       c1->cd(3);
       if (plotDist) hRes=hResTheta->hResDist;
@@ -124,8 +120,8 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
 
       c1->cd(4);  
       plotAndProfileX(hResTheta->hResDistVsDist,rbx,rby,rbp,-.1, .1, 0, 2.1);
-      float m_theta = ftheta->GetParameter("Mean")*cmToMicron;
-      float s_theta = ftheta->GetParameter("Sigma")*cmToMicron;  
+      m_theta = ftheta->GetParameter("Mean")*cmToMicron;
+      s_theta = ftheta->GetParameter("Sigma")*cmToMicron;  
     }
 
     cout << canvbasename << "  Step3"
@@ -315,7 +311,7 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
     TH2F* h = hResTheta->hResDistVsAngle;
     //    h->Rebin2D(2,1);
 
-    TH2F* hhh=h->Clone();
+    TH2F* hhh=(TH2F*)h->Clone();
     TCanvas* c1= new TCanvas;
     c1->SetTitle(canvbasename+"_test");
     c1->Divide(3,2,0.0005,0.0005);
@@ -383,7 +379,8 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
 
   }
 
+}
 
-
-
+void plot(TString filename, int wheel, int station, int sector=0, int layer=0) {
+  plot(filename,"Cut1",wheel,station,sector,layer);
 }

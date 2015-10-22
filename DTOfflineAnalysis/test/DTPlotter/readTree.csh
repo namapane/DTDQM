@@ -63,8 +63,13 @@
 
 ###
 
-root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr2","statByView")'
-root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr2","statByLayer")'
+# root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr2","statByView")'
+# root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr2","statByLayer")'
 
-root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr4/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr4","statByView")root -q -b '
-readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr4/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr4","statByLayer")'
+# root -q -b 'readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr4/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr4","statByView")root -q -b '
+# readTree.r("/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr4/chain.h", "/data/DT/2012D_22jan13_BP7X_noDRR_ModCorr2/ZMu_2012D_22jan13_BP7X_noDRR_ModCorr4","statByLayer")'
+
+###
+
+root -q -b 'readTree.r("/data/DT/ZMu_2012d_740p4/chain.h", "/data/DT/ZMu_2012d_740p4/ZMu_2012d_740p4","statByView")'
+

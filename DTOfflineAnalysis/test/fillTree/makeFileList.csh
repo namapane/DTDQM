@@ -8,7 +8,7 @@ echo "{" >! chain.h
 
 foreach x ( `ls Chunk*/*.root -1` )
 #echo ${PWD}/${x}
-echo 'DTSegmentTree.Add("'${PWD}/${x}'");' >> chain.h
+echo 'DTSegmentTree->Add("'${PWD}/${x}'");' >> chain.h
 end
 
 echo "}" >> chain.h

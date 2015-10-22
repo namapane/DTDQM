@@ -22,7 +22,7 @@ ROOFITLIBS    =  -L $(shell scram tool info roofitcore | grep "LIBDIR=" | sed s/
 
 CXX		= $(shell scram tool info gcc-cxxcompiler | grep "CXX=" | sed s/"CXX="//)
 
-CXXFLAGS      = -O -Wall -fPIC $(ROOTCFLAGS) $(ROOFITINCL)
+CXXFLAGS      = -O -Wall -fPIC $(ROOTCFLAGS) #$(ROOFITINCL)
 LD	 	= $(CXX)
 LDFLAGS       = 
 SONAME	      = libEvent.so
@@ -81,6 +81,8 @@ LINKDEF		= $(wildcard *LinkDef.h)
 DICTHDRS        = $(patsubst $(LINKDEF),,$(HDRS)) $(LINKDEF)
 
 mydict.cc: $(DICTHDRS)
-	    @echo "Generating dictionary ..."
-	    rootcint -f mydict.cc -c -p -I${ROOTSYS}/include $(DICTHDRS)  
+	@echo "Generating dictionary ..."
+	@echo $(DICTHDRS)
+	@echo $(CXXFLAGS)
+	rootcint -f mydict.cc -c $(CXXFLAGS) -p $(DICTHDRS)  
 

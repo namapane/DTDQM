@@ -25,6 +25,7 @@
 #include <cmath>
 
 using namespace std;
+using namespace dt;
 
 bool patchVd = true; // Apply corrections to the measured vd
 

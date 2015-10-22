@@ -110,7 +110,7 @@ TH1F* plotAndProfileSigmaX (TH2* h2, int rebinX, int rebinY, int rebinProfile, f
   //  setStyle(h2);
   gPad->SetGrid(1,1);
   gStyle->SetGridColor(15);
-  TH2* h2Clone = h2->Clone();
+  TH2* h2Clone = (TH2*) h2->Clone();
   h2Clone->Rebin2D(rebinX,rebinY);
   h2Clone->GetYaxis()->SetRangeUser(minY,maxY);
 
@@ -142,7 +142,7 @@ TH1F* plotAndProfileSigmaX (TH2* h2, int rebinX, int rebinY, int rebinProfile, f
   TObjArray aSlices;
   TF1 fff("a", "gaus", -0.05, 0.05);   
   h2Clone->FitSlicesY(&fff, 0, -1, 0, "QNRG2", &aSlices);
-  TH1F*  ht = aSlices[2]->Clone();    
+  TH1F*  ht = (TH1F*) aSlices[2]->Clone();    
   ht->SetMarkerColor(4);
   ht->GetYaxis()->SetRangeUser(minY,maxY);
   ht->GetXaxis()->SetRangeUser(minX,maxX);
@@ -160,12 +160,12 @@ TH1F* plotAndProfileSigmaX (TH2* h2, int rebinX, int rebinY, int rebinProfile, f
 // minY, maxY: Y range for plotting and for computing profile if addProfile==true.
 //             Note that the simple profile is very sensitive to the Y range used!
 TH1F* plotAndProfileX (TH2* theh, int rebinX, int rebinY, int rebinProfile, float minY, float maxY, float minX=0, float maxX=0) {
-  TH2* h2=theh->Clone();
+  TH2* h2 = (TH2*) theh->Clone();
   
   //  setStyle(h2);
   if (h2==0) {
     cout << "plotAndProfileX: null histo ptr" << endl;
-    return;
+    return 0;
   }
   
   gPad->SetGrid(1,1);
@@ -272,7 +272,7 @@ void printCanvases(TString type="png", TString path="."){
 }
 
 
-setPalette()
+void setPalette()
 {
   const Int_t NRGBs = 5;
   const Int_t NCont = 255;
@@ -300,19 +300,17 @@ setPalette()
 //   }
 
 
-  { // Gray (white->gray)
+  // Gray (white->gray)
     //  similar to gStyle->SetPalette(5);
-    float max = 0.3;
-    float step=(1-max)/(NRGBs-1);
-    Double_t stops[NRGBs] = { 0.00, 0.34, 0.61, 0.84, 1.00 };
-    Double_t red[NRGBs]   = { 1.00, 1-step, 1-2*step, 1-3*step, 1-4*step };
-    Double_t green[NRGBs] = { 1.00, 1-step, 1-2*step, 1-3*step, 1-4*step };
-    Double_t blue[NRGBs]  = { 1.00, 1-step, 1-2*step, 1-3*step, 1-4*step };
-  }
+  float max = 0.3;
+  float step=(1-max)/(NRGBs-1);
+  Double_t stops[NRGBs] = { 0.00, 0.34, 0.61, 0.84, 1.00 };
+  Double_t red[NRGBs]   = { 1.00, 1-step, 1-2*step, 1-3*step, 1-4*step };
+  Double_t green[NRGBs] = { 1.00, 1-step, 1-2*step, 1-3*step, 1-4*step };
+  Double_t blue[NRGBs]  = { 1.00, 1-step, 1-2*step, 1-3*step, 1-4*step };
 
-
- TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
- gStyle->SetNumberContours(NCont);
+  TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
+  gStyle->SetNumberContours(NCont);
 }
 
 
