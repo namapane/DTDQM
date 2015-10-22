@@ -821,11 +821,11 @@ void DTTreeBuilder::beginJob() {
   theTree = new TTree("DTSegmentTree","DTSegmentTree");
   theTree->SetAutoSave(10000000);
 
-  theTree->Branch("segments", "TClonesArray", &segmentArray,32000,0); 
+  theTree->Branch("segments", &segmentArray,32000,0); 
   if (theRecHits2DLabel!="") {
-    theTree->Branch("segments2D", "TClonesArray", &segment2DArray,32000,0); 
+    theTree->Branch("segments2D", &segment2DArray,32000,0);
   }
-  theTree->Branch("muonCands", "TClonesArray", &muArray,32000,0);
+  theTree->Branch("muonCands", &muArray,32000,0);
   theTree->Branch("BX", &BX, "BX/I");
   //  theTree->Branch("Pix", &pix, "Pix/I");
   theTree->Branch("Run", &runN, "Run/I");

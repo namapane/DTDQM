@@ -18,19 +18,19 @@
 //----------------------------------------------------------------------
 
 
-#if !defined(__CINT__)||  defined(__MAKECINT__)
 #include "TFile.h"
 #include "TTree.h"
 #include "TClonesArray.h"
-// #include "root_lib/DTSegmentObject.h"
-// #include "root_lib/DTHitObject.h"
+#include "DQM/DTOfflineAnalysis/test/root_lib/DTSegmentObject.h"
+#include "DQM/DTOfflineAnalysis/test/root_lib/DTHitObject.h"
 #include "DQM/DTOfflineAnalysis/test/root_lib/TTreeReader.h"
 
 #include "TSystem.h"
 #include "TMath.h"
 #include "TLorentzVector.h"
 #include <iostream>
-#endif
+
+// R__LOAD_LIBRARY(libDTOfflineAnalysisEvent) Will work in root 6.04
 
 
 using namespace std;
@@ -46,12 +46,12 @@ void readTree() {
 
 void readTree(TString infile, string outputFile, string GRANULARITY="statByView") {
 
-  cout <<  TString(gSystem->GetLibraries()) << endl;
+  //cout <<  TString(gSystem->GetLibraries()) << endl;
   
-  if (! TString(gSystem->GetLibraries()).Contains("libEvent.so")) {
-    cout << "LOADING " << endl;
-    gSystem->Load("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/libEvent.so"); 
-  } 
+  //  if (! TString(gSystem->GetLibraries()).Contains("libEvent.so")) {
+  //  cout << "LOADING " << endl;
+  //  gSystem->Load("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/libEvent.so"); 
+  //} 
 
   TChain c("DTSegmentTree");
 

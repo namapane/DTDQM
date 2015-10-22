@@ -1,3 +1,8 @@
 <library   file="plotter/*.cc" name="DTOfflineAnalysisPlotter">
   <use   name="rootgraphics"/>
 </library>
+
+
+<library   file="root_lib/*.cc" name="DTOfflineAnalysisEvent">
+  <use   name="roofit"/>
+</library>

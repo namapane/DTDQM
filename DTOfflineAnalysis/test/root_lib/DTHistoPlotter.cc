@@ -90,7 +90,7 @@ TH1F * DTHistoPlotter::plotNHitsSegm(const int fileN,
 				     int wheel, int station, int sector,
 				     const TString& drawOptions) {
   DTDetId detId(wheel, station, sector, 0, 0, 0);
-  HSegment *hSeg = getHistoSeg(fileN, set, detId);
+  //HSegment *hSeg = getHistoSeg(fileN, set, detId);
   TH1F *histo = 0; //hSeg->hNHits; //FIXME to be updated
   if(histo !=0) {
     drawHisto(fileN, histo, drawOptions);
@@ -194,7 +194,7 @@ TH1F * DTHistoPlotter::plotNHitsTheta(const int fileN,
 				      int wheel, int station, int sector,
 				      const TString& drawOptions) {
   DTDetId detId(wheel, station, sector, 0, 0, 0);
-  HSegment *hSeg = getHistoSeg(fileN, set, detId);
+  //  HSegment *hSeg = getHistoSeg(fileN, set, detId);
   TH1F *histo = 0; // hSeg->hNHitsTheta; //FIXME: to be updated
   if(histo !=0) {
     drawHisto(fileN, histo, drawOptions);
@@ -208,7 +208,7 @@ TH1F * DTHistoPlotter::plotT0SegPhi(const int fileN,
 				    int wheel, int station, int sector,
 				    const TString& drawOptions) {
   DTDetId detId(wheel, station, sector, 0, 0, 0);
-  HSegment *hSeg = getHistoSeg(fileN, set, detId);
+  //HSegment *hSeg = getHistoSeg(fileN, set, detId);
   TH1F *histo = 0; //hSeg->ht0Phi; //FIXME to be updated
   if(histo !=0) {
     drawHisto(fileN, histo, drawOptions);

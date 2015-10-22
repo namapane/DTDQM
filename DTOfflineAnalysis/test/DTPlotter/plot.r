@@ -7,16 +7,24 @@
 //
 //----------------------------------------------------------------------
 
+#include "DQM/DTOfflineAnalysis/test/root_lib/Utils.h"
+#include "macros2.C"
+#include "DQM/DTOfflineAnalysis/test/root_lib/Histograms.h"
+#include "DQM/DTOfflineAnalysis/test/root_lib/DTDetId.h"
+#include <iostream>
+
+using namespace std;
+
+
 void plot(TString filename, TString cut, int wheel, int station, int sector=0, int layer=0) {
 
-   if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
-     cout << "loading" << endl;
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
-     gROOT->LoadMacro("macros2.C");
-   }
-
+//    if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
+//      cout << "loading" << endl;
+//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
+//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
+//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
+//      gROOT->LoadMacro("macros2.C");
+//    }
 
   //----------------------------------------------------------------------
   //  Configurable options
@@ -275,10 +283,10 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
     c2->cd(4);  
     plotAndProfileX(hResPhi2->hResDistVsDist,  rbx,rby,rbp,-.1, .1, 0, 2.1);
 
-    m_phi1 = fphi1->GetParameter("Mean")*cmToMicron;
-    s_phi1 = fphi1->GetParameter("Sigma")*cmToMicron;
-    m_phi2 = fphi2->GetParameter("Mean")*cmToMicron;
-    s_phi2 = fphi2->GetParameter("Sigma")*cmToMicron;
+    float m_phi1 = fphi1->GetParameter("Mean")*cmToMicron;
+    float s_phi1 = fphi1->GetParameter("Sigma")*cmToMicron;
+    float m_phi2 = fphi2->GetParameter("Mean")*cmToMicron;
+    float s_phi2 = fphi2->GetParameter("Sigma")*cmToMicron;
     
     cout << canvbasename
 	 << " Phi1: M= " << int(floor(m_phi1+0.5)) << " s= " << int(floor(s_phi1+0.5))
