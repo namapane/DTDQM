@@ -4,13 +4,14 @@ import FWCore.ParameterSet.Config as cms
 
 isMC = False              #True for MC
 
-reReco = False            #re-reconstruct segments; if true:
+reReco = True            #re-reconstruct segments; if true:
 skipDeltaSuppr = True    #skip DRR
 ALIGNMENT = ""           #alignment DB to use
 doAngleCorr = False      #apply angle correction (experimental)
 
 T0_CALIBRATION = ""
-
+TTRIG_CALIBRATION = ""
+ 
 ######################################################################
 import os
 print 'Working in: ', os.environ['CMSSW_BASE']
@@ -65,24 +66,25 @@ process.maxEvents = cms.untracked.PSet(
 process.load("DQM.DTOfflineAnalysis.dtLocalRecoAnalysis_cfi")
 
 
-process.load('Configuration/StandardSequences/MagneticField_AutoFromDBCurrent_cff')
-process.load('Configuration/Geometry/GeometryIdeal_cff')
+process.load("Configuration.StandardSequences.GeometryDB_cff")
+process.load("Configuration.StandardSequences.MagneticField_38T_cff")
+
 
 if T0_CALIBRATION != "" :
     process.GlobalTag.toGet = cms.VPSet(
         cms.PSet(record = cms.string("DTT0Rcd"),
                  tag = cms.string("t0"),
                  connect = cms.untracked.string("sqlite_file:"+T0_CALIBRATION))
-        )
-#if CALIBRATION != "" :
-#process.GlobalTag.toGet = cms.VPSet(
-#    cms.PSet(record = cms.string("DTTtrigRcd"),
-#             tag = cms.string("ttrig"),
-#             connect = cms.untracked.string("sqlite_file:Data_v5.db"))
+    )
+if TTRIG_CALIBRATION != "" :
+    process.GlobalTag.toGet = cms.VPSet(
+        cms.PSet(record = cms.string("DTTtrigRcd"),
+                 tag = cms.string("ttrig"),
+                 connect = cms.untracked.string("sqlite_file:"+TTRIG_CALIBRATION))
 #    cms.PSet(record = cms.string("DTMtimeRcd"),
 #             tag = cms.string("vdrift"),
 #             connect = cms.untracked.string("sqlite_file:vdrift_543_v5s1_statByLayer_sigma_a.db"))
-#)
+    )
 
 ### Non-standard DB alignment
 #DTGeom16May_Design.db --> internal alignment nominale

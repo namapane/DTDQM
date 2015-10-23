@@ -209,7 +209,8 @@ TH1F* plotAndProfileX (TH2* theh, int rebinX, int rebinY, int rebinProfile, floa
     //    TF1 fff("a", "gaus", -0.1, 0.1);   
     h2->FitSlicesY(0, 0, -1, 0, "QNR", &aSlices); // add "G2" to merge 2 consecutive bins
 
-    TH1F* ht = (TH1F*) aSlices[1]->Clone();    
+    ht = (TH1F*) aSlices[1]->Clone();
+
     Utils::newName(ht);
     // Remove bins with failed fits, based on fit errors
     float thr = (maxY-minY)/4.;

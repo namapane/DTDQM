@@ -3,7 +3,7 @@
 import imp
 import copy
 import os
-#import shutil
+import shutil
 #import pickle
 #import math
 
@@ -117,3 +117,4 @@ if __name__ == '__main__':
        scriptFile = open(path+'/batchScript.sh','w')
        scriptFile.write( batchScriptCERN( i ) )
        scriptFile.close()
+       os.system('cp *.db '+path)

@@ -1,13 +1,35 @@
+#include <TH1F.h>
+#include <TH2F.h>
+#include <TF1.h>
+#include <TLine.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TProfile.h>
+#include <TFile.h>
+#include <TColor.h>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+#include "DQM/DTOfflineAnalysis/test/root_lib/Utils.h"
+#include "macros2.C"
+#include "DQM/DTOfflineAnalysis/test/root_lib/Histograms.h"
+#include "DQM/DTOfflineAnalysis/test/root_lib/DTDetId.h"
+#include "ranges.C"
+#include "summaryPlot.C"
+
+
 void plotAllWS(TString filename, int sector, int sl) {
 
-   if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
-     gROOT->LoadMacro("macros2.C");
-     gROOT->LoadMacro("ranges.C+");
-     gROOT->LoadMacro("summaryPlot.C+");
-   }
+//    if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
+//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
+//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
+//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
+//      gROOT->LoadMacro("macros2.C");
+//      gROOT->LoadMacro("ranges.C+");
+//      gROOT->LoadMacro("summaryPlot.C+");
+//    }
    
    
    bool doRes = true;
@@ -30,7 +52,6 @@ void plotAllWS(TString filename, int sector, int sl) {
 
    setPalette();
    opt2Dplot = "col";
-   float nsigma = 2;
 
    TFile *file = new TFile(filename);
    
@@ -121,6 +142,7 @@ void plotAllWS(TString filename, int sector, int sl) {
     TCanvas* c2= new TCanvas(canvbasename+"_AllWSResVsAngle", canvbasename+"_AllWSResVsAngle");
     
     c2->Divide(5,4,0.0005,0.0005);
+
     
     for (int wheel = -2; wheel<=2; ++wheel) {
       for (int station = 1; station<=4; ++station) {
