@@ -75,4 +75,4 @@
 
 root -q -b -e 'gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");' 'readTree.r ( "/data/DT/ZMu_2015D/chain.h","ZMu_2015D_PromptReco-v3", "statByView" )'
 
-root -q -b -e 'gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");' 'readTree.r ( "/data/DT/ZMu_2015D/chain.h","ZMu_2015D_PromptReco-v3", "statByLayer" )'
+root -q -b -e 'gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");' 'readTree.r ( "/data/DT/ZMu_2015D_ttrig_residuals_256675/chain.h","ZMu_2015D_ttrig_residuals_256675", "statByView" )'

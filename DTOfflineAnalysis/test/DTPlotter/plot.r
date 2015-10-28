@@ -254,12 +254,17 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
     ht0->Draw("col");
 
     c2->cd(2);
-    ht0->ProjectionY()->Draw();
+    TH1D* hprojY = ht0->ProjectionY();
+    hprojY->GetXaxis()->SetTitleOffset();
+    hprojY->Draw();
+    
 
     c2->cd(3);
     ht0->ProjectionX()->Draw();
 
     c2->cd(4);
+    hSegChamberSel->ht0PhiVsPhi->SetXTitle("angle");
+    hSegChamberSel->ht0PhiVsPhi->SetYTitle("t0 #phi");
     plotAndProfileX(hSegChamberSel->ht0PhiVsPhi,rbx,rby,1,-5, 5, -0.5, 0.5);
   }
   

@@ -22,59 +22,60 @@ using namespace std;
 
 void plotAllWS(TString filename, int sector, int sl) {
 
-//    if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
-//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
-//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
-//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
-//      gROOT->LoadMacro("macros2.C");
-//      gROOT->LoadMacro("ranges.C+");
-//      gROOT->LoadMacro("summaryPlot.C+");
-//    }
+  //    if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
+  //      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
+  //      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
+  //      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
+  //      gROOT->LoadMacro("macros2.C");
+  //      gROOT->LoadMacro("ranges.C+");
+  //      gROOT->LoadMacro("summaryPlot.C+");
+  //    }
    
    
-   bool doRes = true;
-   bool doResVsDist = true;
-   bool doResVsAngle = true;
-   bool doResVsX = true;
-   bool doResVsY = true;
-   bool doAngleDist = true;
+  bool doRes = true;
+  bool doResVsDist = true;
+  bool doResVsAngle = true;
+  bool doResVsX = true;
+  bool doResVsY = true;
+  bool doAngleDist = false;
+  bool doVD = true;
    
-   float nsigma = 2;
+  float nsigma = 2;
    
-   TStyle * style = getStyle("tdr");
-   style->cd();  
+  TStyle * style = getStyle("tdr");
+  style->cd();  
 
-   gStyle->SetCanvasDefW(1375); // Set larger canvas
-   gStyle->SetCanvasDefH(800);  
-   gStyle->SetTitleSize(0.05,"XYZ"); // Set larger axis titles
-   gStyle->SetTitleOffset(1.5,"Y");
-   gStyle->SetOptTitle(0); // remove histogram titles
+  gStyle->SetCanvasDefW(1375); // Set larger canvas
+  gStyle->SetCanvasDefH(800);  
+  gStyle->SetTitleSize(0.05,"XYZ"); // Set larger axis titles
+  gStyle->SetTitleOffset(1.5,"Y");
+  gStyle->SetOptTitle(0); // remove histogram titles
 
-   setPalette();
-   opt2Dplot = "col";
+  setPalette();
+  opt2Dplot = "col";
 
-   TFile *file = new TFile(filename);
+  TFile *file = new TFile(filename);
    
    
-   TString canvbasename = filename;
-   canvbasename = canvbasename.Replace(canvbasename.Length()-5,5,"") + TString("_Se") + (long) sector + "_SL" + (long) sl;
+  TString canvbasename = filename;
+  canvbasename = canvbasename.Replace(canvbasename.Length()-5,5,"") + TString("_Se") + (long) sector + "_SL" + (long) sl;
    
    
-   HRes1DHits* hRes[5][4]; // W, S;  
-   HSegment*   hSeg[5][4];
-   //HSegment*   hSeg;
+  HRes1DHits* hRes[5][4]; // W, S;  
+  HSegment*   hSeg[5][4];
+  //HSegment*   hSeg;
    
-   for (int wheel = -2; wheel<=2; ++wheel) {
-     for (int station = 1; station<=4; ++station) {
-       int iW = wheel+2;
-       int iSt= station-1;
-       DTDetId detId2(wheel, station, sector, sl, 0, 0); 
-       DTDetId chDetId(wheel, station, sector, 0, 0, 0);
-       hRes[iW][iSt] = new HRes1DHits(Utils::getHistoNameFromDetIdAndSet(detId2, "Cut1"),file);
-       hSeg[iW][iSt] = new HSegment(Utils::getHistoNameFromDetIdAndSet(chDetId, "Cut1"),file);
+  for (int wheel = -2; wheel<=2; ++wheel) {
+    for (int station = 1; station<=4; ++station) {
+      int iW = wheel+2;
+      int iSt= station-1;
+      DTDetId detId2(wheel, station, sector, sl, 0, 0); 
+      DTDetId chDetId(wheel, station, sector, 0, 0, 0);
+      hRes[iW][iSt] = new HRes1DHits(Utils::getHistoNameFromDetIdAndSet(detId2, "Cut1"),file);
+      hSeg[iW][iSt] = new HSegment(Utils::getHistoNameFromDetIdAndSet(chDetId, "Cut1"),file);
        
-     }
-   }
+    }
+  }
    
   if(doRes){
     TCanvas* c0= new TCanvas(canvbasename+"_AllWSRes", canvbasename+"_AllWSRes");    
@@ -82,39 +83,39 @@ void plotAllWS(TString filename, int sector, int sl) {
     c0->Divide(5,4,0.0005,0.0005);
 
    
-   for (int wheel = -2; wheel<=2; ++wheel) {
-     for (int station = 1; station<=4; ++station) {
-       int iW = wheel+2;
-       int iSt= station-1;
-       // DTDetId detId(wheel, station, sector, sl, 0, 0);
+    for (int wheel = -2; wheel<=2; ++wheel) {
+      for (int station = 1; station<=4; ++station) {
+	int iW = wheel+2;
+	int iSt= station-1;
+	// DTDetId detId(wheel, station, sector, sl, 0, 0);
 
-       if(sl==2 && station ==4) continue;
+	if(sl==2 && station ==4) continue;
 
-       int ipad=iW+1 + (3-iSt)*5;
-       c0->cd(ipad); ++ipad;
+	int ipad=iW+1 + (3-iSt)*5;
+	c0->cd(ipad); ++ipad;
 
-       float min;
-       float max;
+	float min;
+	float max;
 
-       DTDetId chDetId(wheel, station, sector, sl, 0, 0);
-       rangeAngle(chDetId, min, max);
-      //  cout << "min" << min << endl;
-//        cout << "max" << max << endl;
+	DTDetId chDetId(wheel, station, sector, sl, 0, 0);
+	rangeAngle(chDetId, min, max);
+	//  cout << "min" << min << endl;
+	//        cout << "max" << max << endl;
 
-       TH1F* h = hRes[iW][iSt]->hResDist;
+	TH1F* h = hRes[iW][iSt]->hResDist;
        
-    //    if(sl==2){
-// 	 TH1F* hAlpha = hSeg[iW][iSt]->hThetaLoc;
-//        }
+	//    if(sl==2){
+	// 	 TH1F* hAlpha = hSeg[iW][iSt]->hThetaLoc;
+	//        }
 
-       TF1* fres=drawGFit(h, nsigma, -0.4, 0.4);
+	TF1* fres=drawGFit(h, nsigma, -0.4, 0.4);
        
-     //h->GetXaxis()->SetRangeUser(-0.4,0.4);
-     // h->Draw();
+	//h->GetXaxis()->SetRangeUser(-0.4,0.4);
+	// h->Draw();
 
-     }
-   }
- }
+      }
+    }
+  }
   
 
   if (doResVsDist) {
@@ -194,28 +195,27 @@ void plotAllWS(TString filename, int sector, int sl) {
     }
 
     // Summary plot (still being developed)
-    TCanvas* c6= new TCanvas(canvbasename+"_AllWSAngleCorr_p0", canvbasename+"_AllWSAngleCorr_p0");    
-    hs_p0.hsumm->GetYaxis()->SetRangeUser(0.,0.5);
-    hs_p0.hsumm->Draw("p");
-    
-    
-    float p0_m[3][3];
-    float p1_m[3][3];
-    
-    for (int wheel = 0; wheel<=2; ++wheel) {
-      for (int station = 1; station<=3; ++station) {
+    if (false) {
+      TCanvas* c6= new TCanvas(canvbasename+"_AllWSAngleCorr_p0", canvbasename+"_AllWSAngleCorr_p0");    
+      hs_p0.hsumm->GetYaxis()->SetRangeUser(0.,0.5);
+      hs_p0.hsumm->Draw("p");
 
-	float p0_n = hs_p0.hsumm->GetBinContent(hs_p0.bin(-wheel,station,0));
-	float p0_p = hs_p0.hsumm->GetBinContent(hs_p0.bin(wheel,station,0));
-	float p1_n = hs_p1.hsumm->GetBinContent(hs_p1.bin(-wheel,station,0));
-	float p1_p = hs_p1.hsumm->GetBinContent(hs_p1.bin(wheel,station,0));
-	p0_m[wheel][station] = (p0_n + p0_p)/2;
-	p1_m[wheel][station] = (p1_n + p1_p)/2;
-	cout << wheel << "   "   << station << "   " <<  p0_m[wheel][station] <<  "   "<<p1_m[wheel][station] <<endl;
+      float p0_m[3][3];
+      float p1_m[3][3];
+    
+      for (int wheel = 0; wheel<=2; ++wheel) {
+	for (int station = 1; station<=3; ++station) {
+
+	  float p0_n = hs_p0.hsumm->GetBinContent(hs_p0.bin(-wheel,station,0));
+	  float p0_p = hs_p0.hsumm->GetBinContent(hs_p0.bin(wheel,station,0));
+	  float p1_n = hs_p1.hsumm->GetBinContent(hs_p1.bin(-wheel,station,0));
+	  float p1_p = hs_p1.hsumm->GetBinContent(hs_p1.bin(wheel,station,0));
+	  p0_m[wheel][station] = (p0_n + p0_p)/2;
+	  p1_m[wheel][station] = (p1_n + p1_p)/2;
+	  cout << wheel << "   "   << station << "   " <<  p0_m[wheel][station] <<  "   "<<p1_m[wheel][station] <<endl;
+	}
       }
-      
     }
-
   }
     
   if (doResVsX) {
@@ -235,9 +235,9 @@ void plotAllWS(TString filename, int sector, int sl) {
     }
   }
 
- if (doResVsY) {
+  if (doResVsY) {
 
-   TCanvas* c4=new TCanvas(canvbasename+"_AllWSResVsY", canvbasename+"_AllWSResVsY");    
+    TCanvas* c4=new TCanvas(canvbasename+"_AllWSResVsY", canvbasename+"_AllWSResVsY");    
      
     c4->Divide(5,4,0.0005,0.0005);
 
@@ -253,45 +253,63 @@ void plotAllWS(TString filename, int sector, int sl) {
     }
   }
 
- if(doAngleDist){
-   TCanvas* c5= new TCanvas(canvbasename+"_AllWSAngleDist", canvbasename+"_AllWSAngleDist");
+  if(doAngleDist){
+    TCanvas* c5= new TCanvas(canvbasename+"_AllWSAngleDist", canvbasename+"_AllWSAngleDist");
    
-   c5->Divide(5,4,0.0005,0.0005);
+    c5->Divide(5,4,0.0005,0.0005);
    
-   for (int wheel = -2; wheel<=2; ++wheel) {
-     for (int station = 1; station<=4; ++station) {
-       int iW = wheel+2;
-       int iSt= station-1;
-       if(sl==2 && station ==4) continue;
-       // DTDetId detId(wheel, station, sector, sl, 0, 0);
-       int ipad=iW+1 + (3-iSt)*5;
-       c5->cd(ipad); ++ipad;
+    for (int wheel = -2; wheel<=2; ++wheel) {
+      for (int station = 1; station<=4; ++station) {
+	int iW = wheel+2;
+	int iSt= station-1;
+	if(sl==2 && station ==4) continue;
+	// DTDetId detId(wheel, station, sector, sl, 0, 0);
+	int ipad=iW+1 + (3-iSt)*5;
+	c5->cd(ipad); ++ipad;
 
-       float min;
-       float max;
+	float min;
+	float max;
 
-       DTDetId chDetId(wheel, station, sector, sl, 0, 0);
-       rangeAngle(chDetId, min, max);
-      //  cout << "min" << min << endl;
-//        cout << "max" << max << endl;
+	DTDetId chDetId(wheel, station, sector, sl, 0, 0);
+	rangeAngle(chDetId, min, max);
+	//  cout << "min" << min << endl;
+	//        cout << "max" << max << endl;
 
-       TH1F* hAlpha = hSeg[iW][iSt]->hPhiLoc;
+	TH1F* hAlpha = hSeg[iW][iSt]->hPhiLoc;
        
-       if(sl==2){
-	 TH1F* hAlpha = hSeg[iW][iSt]->hThetaLoc;
-       }
+	if(sl==2){
+	  TH1F* hAlpha = hSeg[iW][iSt]->hThetaLoc;
+	}
 
    
        
-       hAlpha->GetXaxis()->SetRangeUser(-1.2,1.2);
-       hAlpha->Draw();
+	hAlpha->GetXaxis()->SetRangeUser(-1.2,1.2);
+	hAlpha->Draw();
 
-     }
-   }
- }
- 
+      }
+    }
+  }
+
+
+  if(doVD && sl!=2){
+    TCanvas* c0= new TCanvas(canvbasename+"_AllWSVd", canvbasename+"_AllWSVd");    
+    
+    c0->Divide(5,4,0.0005,0.0005);
+
+    for (int wheel = -2; wheel<=2; ++wheel) {
+      for (int station = 1; station<=4; ++station) {
+	int iW = wheel+2;
+	int iSt= station-1;
+
+	if(sl==2 && station ==4) continue;
+
+	int ipad=iW+1 + (3-iSt)*5;
+	c0->cd(ipad); ++ipad;
+
+	plotAndProfileX(hSeg[iW][iSt]->hdVDriftVsY,2,1,1,-0.03,0.03, -130., 130.);
+
+      }
+    }
+  }
+
 }
-
-
-
-

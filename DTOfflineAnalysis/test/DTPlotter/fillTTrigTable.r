@@ -8,16 +8,28 @@
 //
 //------------------------------
 
+#include <TH1F.h>
+#include <TH2F.h>
+#include <TF1.h>
+#include <TLine.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TProfile.h>
+#include <TFile.h>
+#include <TColor.h>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+#include "DQM/DTOfflineAnalysis/test/root_lib/Utils.h"
+#include "macros2.C"
+#include "DQM/DTOfflineAnalysis/test/root_lib/Histograms.h"
+#include "DQM/DTOfflineAnalysis/test/root_lib/DTDetId.h"
 
 #include <iomanip>
 
 void plotAll() {
-
-  gROOT->LoadMacro("macros2.C");
-  gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
-  gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
-  gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
-
   // Configurable parameters --------------------
 
 
@@ -41,9 +53,11 @@ void plotAll() {
 //     TString filename = "ZMu_2012D_22jan13_SL.root";
 //     TString table = "ttrig_ZMu_2012D_22jan13_SL.txt";
 
-  TString filename = "ZMu_2012D_22jan13_statByLayer.root";
-  TString table = "ttrig_ZMu_2012D_22jan13_statByLayer.txt";
+//  TString filename = "ZMu_2012D_22jan13_statByLayer.root";
+  //  TString table = "ttrig_ZMu_2012D_22jan13_statByLayer.txt";
 
+  TString filename =    "ZMu_2015D_ttrig_residuals_256675_15GeV_statByView.root";
+  TString table = "ttrig_ZMu_2015D_ttrig_residuals_256675_15GeV_statByView.txt";
 
 //   TString filename = "ZMu_2012D_22jan13_noDRR_statByView.root";
 //   TString table = "ttrig_ZMu_2012D_22jan13_noDRR_statByView.txt";

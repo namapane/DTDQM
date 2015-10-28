@@ -75,7 +75,7 @@ void readTree(TString infile, string outputFile, string GRANULARITY="statByView"
                   // >=4: debug plots (eg res vs cell)
   reader->setDebug(debug);
   reader->setFilterEvents(1); //apply selection: at least 1 good, hi-pT mu + run range filter in data
-  reader->setMinPt(5.);
+  reader->setMinPt(15.);
   //  reader->setFilterSL(true); // Skip predefined list of bad SLs
   reader->setRunRange(144045, -1);
 

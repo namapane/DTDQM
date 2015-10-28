@@ -767,9 +767,15 @@ void DTTreeBuilder::analyze(const Event& event, const EventSetup& setup) {
       muObj->type=type;
 
       // Segment matches
+//       map<detId, const MuonChamberMatch*> matchesMap;
 //       if(muon->isMatchesValid()){
-// 	const std::vector<MuonChamberMatch>& matches = muon->matches();
-// 	cout << "matches: " << matches.size() << endl;
+//  	const std::vector<MuonChamberMatch>& matches = muon->matches();
+// 	for (vector<MuonChamberMatch>::const_iterator im=matches.begin(); im<matches.end(); ++im){
+// 	  if (im->detector() == MuonSubdetId::DT){
+// 	    matchesMap[im->id] = &(*im);
+// 	  }
+// 	}
+// 	//	cout << "matches: " << matches.size() << " " << matchesMap.size() << endl;
 //       }
 
       int sel = 0;
