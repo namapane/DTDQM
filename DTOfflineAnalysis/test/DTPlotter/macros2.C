@@ -1,3 +1,6 @@
+#include <iostream>
+
+using namespace std;
 
 // Global options
 TString opt2Dplot = "col";

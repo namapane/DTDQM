@@ -44,7 +44,8 @@ from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #execfile("files_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball.py")    # Z MC
 #execfile("files_RelValZMM5312.py")                                       # Z RelVal, 5X
 #execfile("files_RelValZMM700p4.py")                                      # Z RelVal, 7X
-execfile("files_ZMu_2015D.py")                                 # 2015 Data
+#execfile("files_ZMu_2015D.py")                                  # 2015D-v3
+execfile("files_ZMu_2015Dv4.py")                                 # 2015D-v4
 
 
 # Override the GT set in flies above to use IDEAL MC
@@ -172,5 +173,5 @@ if (False) :
 
 
 if (not isMC) :
-    execfile("json_2015_25ns.py")
+    execfile("json_2015_25ns_MuonPhys.py")
 
