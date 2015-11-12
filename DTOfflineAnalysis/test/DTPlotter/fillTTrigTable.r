@@ -2,8 +2,8 @@
 //
 // Write table of ttrigs
 //
-// run: 
-// .x writeTTrigTable.r
+// run:  
+// root -q -b -e 'gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");' fillTTrigTable.r
 //
 //
 //------------------------------
@@ -29,53 +29,35 @@ using namespace std;
 
 #include <iomanip>
 
-void plotAll() {
+float filter(float offset);
+
+void fillTTrigTable() {
+
   // Configurable parameters --------------------
+  float vdrift = 54.3/10000.; // in cm/ns
 
+  float conversion = 1.; // output offsets in cm
+  //  float conversion = vdrift; // output offsets in ns (approxymately; deprecated)
 
-  float cmToMicron = 10000.;
-  float vdrift = 54.3;
   float sigmafit = 2;
-  TString granularity = "stat";    // collapse sectors; for statBy*
-  //  TString granularity = "SL";  // sectors independently
-
-//   TString filename = "ZMu_2012DpromptTest_statByView.root";
-//   TString table = "ttrig_test_statByView.txt";
-
- 
-//   TString filename = "ZMu_2012D_22jan13_statByView.root";
-//   TString table = "ttrig_ZMu_2012D_22jan13_statByView.txt";
+  //TString granularity = "stat";    // collapse sectors; for "statBy*"
+  TString granularity = "SL";  // sectors independently ("SL" or "ChamberBy*"
 
 
-//    TString filename = "ZMu_2012D_22jan13_statByView.root";
-//    TString table = "ttrig_ZMu_2012D_22jan13_statByView.txt";
+//   TString filename =    "ZMu_2015Dv4_ttrig_256675_vDrift_259626_chamberByView.root";
+//   TString table = "ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_chamberByView.txt";
 
-//     TString filename = "ZMu_2012D_22jan13_SL.root";
-//     TString table = "ttrig_ZMu_2012D_22jan13_SL.txt";
+//    TString filename =    "ZMu_2015Dv4_ttrig_256675_vDrift_259626_run258443-258445_chamberByView.root";
+//    TString table = "ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_run258443-258445_chamberByView_corr.txt";
 
-//  TString filename = "ZMu_2012D_22jan13_statByLayer.root";
-  //  TString table = "ttrig_ZMu_2012D_22jan13_statByLayer.txt";
+//  TString filename =    "ZMu_2015Dv4_ttrig_258443_vDrift_259626_run258443-258445_chamberByView.root";
+//  TString table = "ttrig_ZMu_2015Dv4_ttrig_258443_vDrift_259626_run258443-258445_chamberByView.txt";
 
-  TString filename =    "ZMu_2015D_ttrig_residuals_256675_15GeV_statByView.root";
-  TString table = "ttrig_ZMu_2015D_ttrig_residuals_256675_15GeV_statByView.txt";
-
-//   TString filename = "ZMu_2012D_22jan13_noDRR_statByView.root";
-//   TString table = "ttrig_ZMu_2012D_22jan13_noDRR_statByView.txt";
-
-//    TString filename = "ZMu_2012D_22jan13_noDRR_SL.root";
-//    TString table = "ttrig_ZMu_2012D_22jan13_noDRR_SL.txt";
-
-//   TString filename = "DYJetsToLL_M-50_53X_STD_statByView.root";
-//   TString table = "ttrig_DYJetsToLL_M-50_53X_STD_statByView.txt";
+   TString filename =    "ZMu_2015Dv4_ttrig_256675_corrRun258443-258445_vDrift_259626_raw_chamberByView.root";
+   TString table = "ttrig_ZMu_2015Dv4_ttrig_256675_corrRun258443-258445_vDrift_259626_raw_chamberByView.txt";
 
 //   TString filename = "DYJetsToLL_M-50_53X_STD_SL.root";
 //   TString table = "ttrig_DYJetsToLL_M-50_53X_STD_SL.txt";
-
-//   TString filename = "DYJetsToLL_M-50_53X_IDEAL_noDRR_statByView.root";
-//   TString table = "ttrig_DYJetsToLL_M-50_53X_IDEAL_noDRR_statByView.txt";
-
-//   TString filename = "DYJetsToLL_M-50_53X_IDEAL_noDRR_SL.root";
-//   TString table = "ttrig_DYJetsToLL_M-50_53X_IDEAL_noDRR_SL.txt";
 
 
   TString tablet0seg = "";
@@ -85,10 +67,6 @@ void plotAll() {
   ofstream f(table,ios_base::out);
   ofstream* ft0seg =0;
   if (tablet0seg!="") ft0seg = new ofstream(tablet0seg,ios_base::out);
-
-
-//   f.precision(1);
-//   f << fixed;
 
   TFile *file = new TFile(filename);
 
@@ -133,43 +111,41 @@ void plotAll() {
 	float ttrig3 =0.;
 	float mt0Phi =0;
 	float mt0Theta =0;
+	float ttrig2Mean=0;
 
- 	TF1* fphi1=drawGFit(hResPhi1->hResDist, sigmafit, -0.4, 0.4);
-	ttrig1=fphi1->GetParameter("Mean")*cmToMicron/vdrift;
+ 	TF1* fphi1=drawGFit(hResPhi1->hResDist, sigmafit, -1, 1);
+	ttrig1=fphi1->GetParameter("Mean")/conversion;
 
 	if (hResPhi2->hResDist->GetEntries()) {
-	  TF1* fphi2=drawGFit(hResPhi2->hResDist, sigmafit, -0.4, 0.4);
-	  ttrig3=fphi2->GetParameter("Mean")*cmToMicron/vdrift;
+	  TF1* fphi2=drawGFit(hResPhi2->hResDist, sigmafit, -1, 1);
+	  ttrig3=fphi2->GetParameter("Mean")/conversion;
 	} else {
 	  ttrig3=ttrig1;
 	}
-
-
-	//	hSegChamberSel->ht0Phi->Rebin(rebin);
-// 	TF1* ft0Phi=drawGFit(hSegChamberSel->ht0Phi, 1.5, -40, 40);
-// 	mt0Phi = ft0Phi->GetParameter("Mean");
-
 	
 	if (station !=4) {
 	  //	  hResTheta->hResDist->Rebin(2);
-	  TF1* ftheta=drawGFit(hResTheta->hResDist, sigmafit, -0.4, 0.4);
-	  ttrig2=ftheta->GetParameter("Mean")*cmToMicron/vdrift;
-
-
-// 	  TF1* ft0Theta=drawGFit(hSegChamberSel->ht0Theta, 1.5, -40, 40);
-// 	  mt0Theta = ft0Theta->GetParameter("Mean");
+	  TF1* ftheta=drawGFit(hResTheta->hResDist, sigmafit, -1, 1);
+	  ttrig2=ftheta->GetParameter("Mean")/conversion;
+	  ttrig2Mean = hResTheta->hResDist->GetMean()/conversion;
+	  float diff = std::abs(ttrig2-ttrig2Mean);
+	  if (diff>0.05/conversion && std::abs(diff/ttrig2)>0.1) { // >50 micron, or 10%
+ 	    cout << "FIT FAILURE? " << ttrig2 << " " << ttrig2Mean << endl;
+ 	  }
 	}
 	
 
-	cout.precision(1);
-	cout << fixed;
+// 	cout.precision(1);
+// 	cout << fixed;
+
+//	if (std::abs(filter(ttrig1)) > 0 ) {	  
 	cout << filename
 	     << " " << wheel << " " << station << " " << sector 
 	     << " " <<  ttrig1;
 	if (station !=4) cout << " " <<  ttrig2;
 	cout << " " <<  ttrig3;
 	cout << endl;
-
+//	}
 	int secmin=1;
 	int secmax=14;
 
@@ -180,14 +156,15 @@ void plotAll() {
 
 	for (int sec = secmin; sec<=secmax; sec++) {
 	  if (station!=4 && sec>12) continue;
-	  writeTTrigTable(f,wheel,station,sec,1, ttrig1);
+	  writeTTrigTable(f,wheel,station,sec,1, filter(ttrig1));
 	  if (ft0seg) writeTTrigTable(*ft0seg,wheel,station,sec,1, mt0Phi);	    
 	  if (station!=4) {
-	    writeTTrigTable(f,wheel,station,sec,2, ttrig2);
+	    writeTTrigTable(f,wheel,station,sec,2, filter(ttrig2));
+	    //	    writeTTrigTable(f,wheel,station,sec,2, filter(ttrig1)); //FIXME impose phi offset to theta 
 	    if (ft0seg) writeTTrigTable(*ft0seg,wheel,station,sec,2, mt0Theta);
 	  }
-	  writeTTrigTable(f,wheel,station,sec,3, ttrig3);
-	  if (ft0seg) writeTTrigTable(*ft0seg,wheel,station,sec,3, mt0Phi);	    
+	  writeTTrigTable(f,wheel,station,sec,3, filter(ttrig3));
+	  if (ft0seg) writeTTrigTable(*ft0seg,wheel,station,sec,3, mt0Phi);
 	}
       }
     }
@@ -195,3 +172,10 @@ void plotAll() {
   delete ft0seg;
 }
 
+
+// Used to filter offsers (ie set zero those below threshold)
+float filter(float offset) {
+//   const float filter = 40/10000.; // 50 micron, assuming offset in cm
+//   if (std::abs(offset)<filter) return 0.;
+  return offset;
+}

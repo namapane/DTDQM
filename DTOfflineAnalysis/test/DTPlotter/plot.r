@@ -1,9 +1,12 @@
 //----------------------------------------------------------------------
 // Run: 
-// .x plot.r("file",w,st[,se][,l])
+// root -e 'gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");' plot.r
+// plot("file",w,st[,se][,l])
 //
-// se=0 -> all sectors (for statByView)
-// se!=0, l!=0 for chamberByLayer etc.
+// sector=0  -> for granularity: "statByView"
+// sector!=0 -> for granularity: chamberByView", "SL", or "statBySL"
+// layer!=0  -> for "statByLayer" or "chamberByLayer"
+// thetaSL:  For "SL", or "statBySL", specify what theta SL to look at. For any other granularity SL3 is merged to SL1
 //
 //----------------------------------------------------------------------
 
@@ -11,20 +14,12 @@
 #include "macros2.C"
 #include "DQM/DTOfflineAnalysis/test/root_lib/Histograms.h"
 #include "DQM/DTOfflineAnalysis/test/root_lib/DTDetId.h"
+
 #include <iostream>
 
 using namespace std;
 
-
-void plot(TString filename, TString cut, int wheel, int station, int sector=0, int layer=0) {
-
-//    if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
-//      cout << "loading" << endl;
-//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
-//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
-//      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
-//      gROOT->LoadMacro("macros2.C");
-//    }
+void plot(TString filename, TString cut, int wheel, int station, int sector=0, int layer=0, int thetaSL=1) {
 
   //----------------------------------------------------------------------
   //  Configurable options
@@ -70,20 +65,34 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
   HRes1DHits *hResTheta = new HRes1DHits(Utils::getHistoNameFromDetIdAndSet(detId2, cut),file);
   HRes1DHits *hResPhi2 = new HRes1DHits(Utils::getHistoNameFromDetIdAndSet(detId3, cut),file);
   HRes1DHits *hResPhi = hResPhi1; // for ByView granularity
+  if (thetaSL==3) {
+    hResPhi = hResPhi2; // for SL granularity
+  }
+  
   // Hit plots step 1
   HRes1DHits *hResPhiS1 = new HRes1DHits(Utils::getHistoNameFromDetIdAndSet(detId1, cut)+"_S1",file);
   HRes1DHits *hResThetaS1 = new HRes1DHits(Utils::getHistoNameFromDetIdAndSet(detId2, cut)+"_S1",file);
-
-  cout << "hResPhi set name:  " << hResPhi->name << " " << hResPhi << endl;
-  cout << "hResTheta set name:" << hResTheta->name << " " << hResTheta << endl;
-
   // Segment plots
   DTDetId chDetId(wheel, station, sector, 0, 0, 0);
   HSegment*   hSegChamberSel = new HSegment(Utils::getHistoNameFromDetIdAndSet(chDetId, cut),file);
+
+  cout << "hResPhi set name:  " << hResPhi->name << " " << hResPhi << endl;
+  cout << "hResTheta set name:" << hResTheta->name << " " << hResTheta << endl;
+  cout << "hSeg set name:" << hSegChamberSel->name << " " << hSegChamberSel << endl;  
   
+  if (hResPhi->hResDist==0) {
+    cout << endl << "Histogram for requested element not available, check the input file granularity." << endl;
+    return;
+  }
+  
+
+
   TString canvbasename = filename;
   
   canvbasename = canvbasename.Replace(canvbasename.Length()-5,5,"") + TString("_") + Utils::getHistoNameFromDetIdAndSet(DTDetId(wheel,station,sector,0,layer,0), cut);
+
+  
+
 
   // Select canvases
   bool doPhiAndThetaS3 = true;
@@ -94,6 +103,13 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
   bool doT0 = true;
   bool doVd = true;
 
+//   doAngularDeps=false;
+//   doPhiThetaVsXY=false;
+//   doPhiThetaVsXYS1=false;
+//   doNHits=false;
+//   doT0=false;
+//   doVd=false;
+
   // Special plots
   bool doPhiBySL = false; // only for "SL" or "ByLayer
   bool doResVsCell = false; // makes sense only for "SL" or "ByLayer
@@ -101,7 +117,13 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
   bool debugProfile=false;
 
 
+
   //-------------------- Residuals in phi and theta 
+  float yRange1D = 0.4; // normal zoom
+  float yRange2D = 0.1; // normal zoom
+//   float yRange1D = 1.; // wide
+//   float yRange2D = .4; // wide
+ 
   if (doPhiAndThetaS3) {
     TCanvas* c1= new TCanvas;
     c1->SetTitle(canvbasename+"_PhiTheta");
@@ -111,10 +133,10 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
     TH1F* hRes;
     if (plotDist) hRes=hResPhi->hResDist;
     else hRes=hResPhi->hResPos;
-    TF1* fphi=drawGFit(hRes, nsigma, -0.4, 0.4);
+    TF1* fphi=drawGFit(hRes, nsigma, -yRange1D, yRange1D);
 
     c1->cd(2);
-    plotAndProfileX(hResPhi->hResDistVsDist,rbx,rby,rbp,-.1, .1, 0, 2.1);
+    plotAndProfileX(hResPhi->hResDistVsDist,rbx,rby,rbp,-yRange2D, yRange2D, 0, 2.1);
     float m_phi = fphi->GetParameter("Mean")*cmToMicron;
     float s_phi = fphi->GetParameter("Sigma")*cmToMicron;
 
@@ -124,10 +146,10 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
       c1->cd(3);
       if (plotDist) hRes=hResTheta->hResDist;
       else hRes=hResTheta->hResPos;
-      TF1* ftheta=drawGFit(hRes, nsigma, -0.4, 0.4);
+      TF1* ftheta=drawGFit(hRes, nsigma, -yRange1D, yRange1D);
 
       c1->cd(4);  
-      plotAndProfileX(hResTheta->hResDistVsDist,rbx,rby,rbp,-.1, .1, 0, 2.1);
+      plotAndProfileX(hResTheta->hResDistVsDist,rbx,rby,rbp,-yRange2D, yRange2D, 0, 2.1);
       m_theta = ftheta->GetParameter("Mean")*cmToMicron;
       s_theta = ftheta->GetParameter("Sigma")*cmToMicron;  
     }
@@ -239,6 +261,7 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
     st->SetOptStat(111);
     st->Draw();
   }
+
 
   //-------------------- nHits, chi2
   if (doT0){

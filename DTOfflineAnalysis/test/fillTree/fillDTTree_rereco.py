@@ -5,8 +5,8 @@ import FWCore.ParameterSet.Config as cms
 
 isMC = False             #True for MC
 
-reReco = False            #re-reconstruct segments; if true, the following are used:
-fromRAW = False
+reReco = False           #re-reconstruct segments; if true, the following are used:
+fromRAW = True           #re-reco from RAW (otherwise, re-reco segments from rechits)
 doAngleCorr = False      #apply angle correction (experimental)
 T0_CALIBRATION = ""      #ttrig .db to use
 TTRIG_CALIBRATION = ""   #ttrig .db to use
@@ -138,7 +138,8 @@ process.dtLocalRecoAnal.rootFileName = 'DTLocalReco.root'
 
 if reReco :
     if fromRAW: ### redigi + rereco, from RAW
-        process.jobPath = cms.Path(process.goodPrimaryVertices*process.muonDTDigis*process.dtlocalreco+process.dt2DSegments+process.muonreco+process.dtLocalRecoAnal)
+#        process.jobPath = cms.Path(process.goodPrimaryVertices*process.muonDTDigis*process.dtlocalreco+process.dt2DSegments+process.muonreco+process.dtLocalRecoAnal)
+        process.jobPath = cms.Path(process.goodPrimaryVertices*process.muonDTDigis*process.dtlocalreco+process.dt2DSegments+process.dtLocalRecoAnal) ### FIXME: without muon reco
     else: ### re-reconstruct segments from rechits
         process.dt4DSegments.Reco4DAlgoConfig.recAlgoConfig.stepTwoFromDigi = True
         process.dt4DSegments.Reco4DAlgoConfig.Reco2DAlgoConfig.recAlgoConfig.stepTwoFromDigi = True
