@@ -3,8 +3,10 @@
 // Write table of ttrigs
 //
 // run:  
-// root -q -b -e 'gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");' fillTTrigTable.r
+// root -q -b 'fillTTrigTable.r("ZMu_2015Dv4_ttrig_256675_vDrift_259626_SL.root")'
 //
+// or
+// root -q -b 'fillTTrigTable.r("ZMu_2015Dv4_ttrig_256675_vDrift_259626_statByView.root", "stat")'
 //
 //------------------------------
 
@@ -31,7 +33,9 @@ using namespace std;
 
 float filter(float offset);
 
-void fillTTrigTable() {
+
+// set granularity="SL" for "SL" or "ChamberBy*";  granularity="stat" for statBy*"
+void fillTTrigTable(TString filename, TString granularity = "SL") {
 
   // Configurable parameters --------------------
   float vdrift = 54.3/10000.; // in cm/ns
@@ -40,25 +44,9 @@ void fillTTrigTable() {
   //  float conversion = vdrift; // output offsets in ns (approxymately; deprecated)
 
   float sigmafit = 2;
-  //TString granularity = "stat";    // collapse sectors; for "statBy*"
-  TString granularity = "SL";  // sectors independently ("SL" or "ChamberBy*"
 
-
-//   TString filename =    "ZMu_2015Dv4_ttrig_256675_vDrift_259626_chamberByView.root";
-//   TString table = "ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_chamberByView.txt";
-
-//    TString filename =    "ZMu_2015Dv4_ttrig_256675_vDrift_259626_run258443-258445_chamberByView.root";
-//    TString table = "ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_run258443-258445_chamberByView_corr.txt";
-
-//  TString filename =    "ZMu_2015Dv4_ttrig_258443_vDrift_259626_run258443-258445_chamberByView.root";
-//  TString table = "ttrig_ZMu_2015Dv4_ttrig_258443_vDrift_259626_run258443-258445_chamberByView.txt";
-
-   TString filename =    "ZMu_2015Dv4_ttrig_256675_corrRun258443-258445_vDrift_259626_raw_chamberByView.root";
-   TString table = "ttrig_ZMu_2015Dv4_ttrig_256675_corrRun258443-258445_vDrift_259626_raw_chamberByView.txt";
-
-//   TString filename = "DYJetsToLL_M-50_53X_STD_SL.root";
-//   TString table = "ttrig_DYJetsToLL_M-50_53X_STD_SL.txt";
-
+  TString table = "ttrig_"+filename;
+  table.ReplaceAll(".root",".txt");
 
   TString tablet0seg = "";
 
@@ -170,6 +158,8 @@ void fillTTrigTable() {
     }
   }
   delete ft0seg;
+
+  cout << endl << "Wrote " << table << endl << endl;
 }
 
 

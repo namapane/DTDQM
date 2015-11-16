@@ -1,7 +1,8 @@
 //----------------------------------------------------------------------
-// Run: 
-// root -e 'gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");' plot.r
+// Run:
+// .L plot.r
 // plot("file",w,st[,se][,l])
+// (can be issued multiple times to add more plots)
 //
 // sector=0  -> for granularity: "statByView"
 // sector!=0 -> for granularity: chamberByView", "SL", or "statBySL"

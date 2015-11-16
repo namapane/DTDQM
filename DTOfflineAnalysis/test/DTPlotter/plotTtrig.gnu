@@ -7,7 +7,7 @@ reset
 set macro
 
 #Set this to 1 to print plots to png files
-print=1
+print=0
 
 # Output to png viewer
 set terminal png enhanced font "Arial,14" size 1000,750
@@ -53,26 +53,48 @@ sl=phi
 
 if (sl==theta) unset arrow 4
 
+#ymin=-6000
+#ymax=8000
+
+#ymin = -50
+#ymax=100
+
+ymin = -50
+ymax=150
+
+
 min(x,y) = x<y?x:y
 max(x,y) = x>y?x:y
-#clip(x) = max(min(x,8000),-6000)
-clip(x) = max(min(x,200),-100)
+clip(x) = max(min(x,ymax),ymin)
 
 vdrift=54.3
 
-#file = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_chamberByView.txt"'
-#file2 = '"<sort -gs -k 2 -k 1 ttrig_ZMu_2015Dv4_ttrig_258443_vDrift_259626_run258443-258445_chamberByView.txt"'
-file = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_run258443-258445_chamberByView.txt"'
-#file2 = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_run258443-258445_chamberByView_corr.txt"'
-file2 = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_corrRun258443-258445_vDrift_259626_raw_chamberByView.txt"'
+# 2015Dv3
+file = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015D_ttrig_256675_vDrift_259626_chamberByView.txt"'
 
-#set yrange [-100:200]
-if (print) {set output "residual_run258443-258445_zoom.png"}
+
+#Full 2015Dv4
+file0 = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_chamberByView.txt"'
+
+# Only run 258443-25844
+file1  = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_run258443-258445_chamberByView.txt"'
+file4 = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_until258442_chamberByView.txt"'
+file5 = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_vDrift_259626_since258446_chamberByView.txt"'
+
+#Recalibrated runs 258443-258445
+#file3 = '"<sort -gs -k 2 -k 1 -k 3 ttrig_ZMu_2015Dv4_ttrig_256675_corrRun258443-258445_vDrift_259626_raw_chamberByView.txt"'
+
+
+
+set yrange [ymin:ymax]
+if (print) {set output "residual_2015Dv4.png"}
 set ylabel "Resudial [{/Symbol m}m]" offset 0,graph 0.35
 
+
 plot \
-@file using (int($4)==1?clip($7*10000):1/0) title '{/Symbol f} SL- run 258443-258445'  w p pt 5 ps 1 lc 1, \
-@file2 using (int($4)==1?clip($7*10000):1/0) title '{/Symbol f} SL - rrecalibrated'  w p pt 2 ps 1.4 lc 7
+@file  using (int($4)==1?clip($7*10000):1/0) title '{/Symbol f} SL- run 256629-258157'  w p pt 5 ps 0.7 lc 2, \
+@file4 using (int($4)==1?clip($7*10000):1/0) title '{/Symbol f} SL- run 258159-258442'  w p pt 6 ps 0.7 lc 1, \
+@file5 using (int($4)==1?clip($7*10000):1/0) title '{/Symbol f} SL- run 258446-258750'  w p pt 8 ps 0.7 lc 7
 
 
 q

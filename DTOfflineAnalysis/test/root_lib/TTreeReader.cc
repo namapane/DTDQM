@@ -580,7 +580,7 @@ void TTreeReader::analyse(const int nEventMax) {
     
     if (filterEvents>=1) {
       if (run> 50000) { // if you happen to use this with MC...
-	if (runmin>0 && run<runmin) continue;
+	if (runmin=>0 && run<runmin) continue;
 	if (runmax>0 && run>runmax) continue;
       }
 

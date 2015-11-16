@@ -74,4 +74,5 @@
 #root -q -b 'readTree.r("/data/DT/ZMu_2012d_740p4/chain.h", "/data/DT/ZMu_2012d_740p4/ZMu_2012d_740p4","statByView")'
 
 
-root -q -b -e 'gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");' 'readTree.r ( "/data/DT/ZMu_2015Dv4_ttrig_256675_vDrift_259626/chain.h","ZMu_2015Dv4_ttrig_256675_vDrift_259626", "chamberByView" )'
+root -q -b 'readTree.r ( "/data/DT/ZMu_2015Dv4_ttrig_256675_vDrift_259626/chain.h","ZMu_2015Dv4_ttrig_256675_vDrift_259626_until258442", "chamberByView" )'
+root -q -b 'readTree.r ( "/data/DT/ZMu_2015Dv4_ttrig_256675_vDrift_259626/chain.h","ZMu_2015Dv4_ttrig_256675_vDrift_259626_since258446", "chamberByView" )'

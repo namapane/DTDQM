@@ -3,7 +3,7 @@
 // Read trees and produce file with histogram for the specified granularity.
 // 
 // Run:
-// .x readTree.r(<input>,<outputRootFile>,GRANULARITY)
+// root -q -b 'readTree.r (readTree.r(<input>,<outputRootFile>,GRANULARITY)
 //
 // Supported GRANULARITY:
 // "statByView";
@@ -78,7 +78,9 @@ void readTree(TString infile, string outputFile, string GRANULARITY="statByView"
   reader->setMinPt(15.);
   //  reader->setFilterSL(true); // Skip predefined list of bad SLs
   reader->setRunRange(144045, -1);
-  //  reader->setRunRange(258443, 258445);
+  // reader->setRunRange(258443, 258445); // Problematic runs in 2015Dv4 (misconfig)
+  //reader->setRunRange(-1,258442); // Problematic runs in 2015Dv4 (misconfig)
+  //  reader->setRunRange(258446,-1); // Problematic runs in 2015Dv4 (misconfig)
 
 
   // all segments
