@@ -176,20 +176,24 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
     c1->Divide(2,2,0.0005,0.0005);
     c1->cd(1);
       
+    hSegChamberSel->hPhiLoc->SetXTitle("#alpha_{#phi} (rad)");
     hSegChamberSel->hPhiLoc->GetXaxis()->SetRangeUser(-1.,1.);
     hSegChamberSel->hPhiLoc->Draw();
 
    
     c1->cd(2);
+    hResPhi->hResDistVsAngle->SetXTitle("#alpha_{#phi} (rad)");
     plotAndProfileX(hResPhi->hResDistVsAngle,rbx,rby,1,-.04, .04, -0.5, 0.5);
 
     c1->cd(3);
     if (hSegChamberSel->hThetaLoc){
+      hSegChamberSel->hThetaLoc->SetXTitle("#alpha_{#theta} (rad)");
       hSegChamberSel->hThetaLoc->Draw();
     }
     
     c1->cd(4);
     if (hResTheta->hResDistVsAngle){
+      hResTheta->hResDistVsAngle->SetXTitle("#alpha_{#theta} (rad)");
       plotAndProfileX(hResTheta->hResDistVsAngle,rbx,rby,1,-.04, .04, -1, 1);
     }
 
@@ -249,22 +253,25 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
     hNh->Draw("BOX");
 
     c1->cd(2);
-    hNh->ProjectionY()->Draw();
+    TH1D* hprojY = hNh->ProjectionY();
+    hprojY->GetXaxis()->SetTitleOffset();
+    hprojY->Draw();
 
     c1->cd(3);
     hNh->ProjectionX()->Draw();
 
 
     c1->cd(4);
+    hSegChamberSel->hChi2->SetXTitle("#chi^{2}");
     hSegChamberSel->hChi2->Draw();
     gPad->Update();
     TPaveStats *st = (TPaveStats*)hSegChamberSel->hChi2->FindObject("stats");
-    st->SetOptStat(111);
+    st->SetOptStat(110);
     st->Draw();
   }
 
 
-  //-------------------- nHits, chi2
+  //-------------------- t0
   if (doT0){
     TCanvas* c2= new TCanvas;
     c2->SetName(canvbasename+"_t0");
@@ -418,6 +425,6 @@ void plot(TString filename, TString cut, int wheel, int station, int sector=0, i
 
 }
 
-void plot(TString filename, int wheel, int station, int sector=0, int layer=0) {
-  plot(filename,"Cut1",wheel,station,sector,layer);
+void plot(TString filename, int wheel, int station, int sector=0, int layer=0, int thetaSL=1) {
+  plot(filename,"Cut1",wheel,station,sector,layer,thetaSL);
 }

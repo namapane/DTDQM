@@ -1,12 +1,29 @@
-void plot12s(TString filename, int wheel, int station, int sl, int layer) {
+/*
+ * Plot residuals for all 12 sectors of a given W,St,Sl,l
+ */
 
-   if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
-     gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
-     gROOT->LoadMacro("macros2.C");
-   }
+#include <TH1F.h>
+#include <TH2F.h>
+#include <TF1.h>
+#include <TLine.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TProfile.h>
+#include <TFile.h>
+#include <TColor.h>
+#include <iostream>
+#include <fstream>
 
+using namespace std;
+
+#include "DQM/DTOfflineAnalysis/test/root_lib/Utils.h"
+#include "macros2.C"
+#include "DQM/DTOfflineAnalysis/test/root_lib/Histograms.h"
+#include "DQM/DTOfflineAnalysis/test/root_lib/DTDetId.h"
+
+
+
+void plot12s(TString filename, int wheel, int station, int sl, int layer=0) {
  
   //  TStyle * style = getStyle("myStyle");
   TStyle * style = getStyle("tdr");

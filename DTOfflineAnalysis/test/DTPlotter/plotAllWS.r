@@ -22,16 +22,6 @@ using namespace std;
 
 void plotAllWS(TString filename, int sector, int sl) {
 
-  //    if (! TString(gSystem->GetLibraries()).Contains("DTDetId_cc")) {
-  //      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
-  //      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
-  //      gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
-  //      gROOT->LoadMacro("macros2.C");
-  //      gROOT->LoadMacro("ranges.C+");
-  //      gROOT->LoadMacro("summaryPlot.C+");
-  //    }
-   
-   
   bool doRes = true;
   bool doResVsDist = true;
   bool doResVsAngle = true;
