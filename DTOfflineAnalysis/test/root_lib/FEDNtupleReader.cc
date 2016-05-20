@@ -225,7 +225,7 @@ void FEDNtupleReader::addTH1F(const TString& name, const TString& formula, const
 
   // Create the new histo to be added to the stack
   TH1F * hNew = new TH1F(name.Data(),name.Data(),nBins, binMin, binMax);
-  hNew->SetBit(TH1::kCanRebin);
+//  hNew->SetBit(TH1::kCanRebin);
   hNew->Sumw2();
   // add to map
   theHistoMap1D[name] = hNew;
@@ -264,7 +264,7 @@ void FEDNtupleReader::addTH2F(const TString& name,
   TH2F * hNew = new TH2F(name.Data(),name.Data(),
 			 nBinsX, binMinX, binMaxX,
 			 nBinsY, binMinY, binMaxY);
-  hNew->SetBit(TH1::kCanRebin);
+//  hNew->SetBit(TH1::kCanRebin);
   // add to map
   theHistoMap2D[name] = hNew;
 

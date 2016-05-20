@@ -17,20 +17,12 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 // #include "Geometry/Vector/interface/Pi.h"
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 
-//Hack to be able to call DTRecSegment2D::update and DTRecSegment4D::phiSegment
-#define protected public
-#include "DataFormats/DTRecHit/interface/DTRecSegment2D.h"
-#undef protected
-#define private public
-#include "DataFormats/DTRecHit/interface/DTRecSegment4D.h"
-#undef private
 #include "RecoLocalMuon/DTSegment/src/DTSegmentUpdator.h"
-
-#include "DataFormats/DTRecHit/interface/DTRecSegment4DCollection.h"
-#include "DataFormats/DTRecHit/interface/DTRecSegment2DCollection.h"
-#include "DataFormats/DTRecHit/interface/DTRecHitCollection.h"
-
 #include "RecoLocalMuon/DTRecHit/interface/DTRecHitAlgoFactory.h"
 
 #include "Geometry/DTGeometry/interface/DTGeometry.h"
@@ -46,13 +38,9 @@
 #include "CondFormats/DataRecord/interface/DTMtimeRcd.h"
 #include "CondFormats/DTObjects/interface/DTMtime.h"
 
-#include "DataFormats/MuonReco/interface/Muon.h"
-#include "DataFormats/MuonReco/interface/MuonFwd.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "DataFormats/MuonReco/interface/MuonSelectors.h"
-#include "DataFormats/VertexReco/interface/VertexFwd.h"
-#include "DataFormats/VertexReco/interface/Vertex.h"
 
 #include "DataFormats/SiPixelCluster/interface/SiPixelCluster.h"
 
@@ -82,12 +70,21 @@ DTTreeBuilder::DTTreeBuilder(const ParameterSet& pset, TFile* file) :
   eventN(-1),
   theUpdator(0)
 {
+  ConsumesCollector collector(consumesCollector());
   debug = pset.getUntrackedParameter<bool>("debug","false");
   // the name of the 4D rec hits collection
   theRecHits4DLabel = pset.getParameter<string>("recHits4DLabel");
   theRecHits2DLabel = pset.getParameter<string>("recHits2DLabel");
   theRecHitLabel = pset.getParameter<string>("recHitLabel");
   theMuonLabel = pset.getParameter<string>("muonLabel");
+
+  recHit4DToken = consumes<DTRecSegment4DCollection>(theRecHits4DLabel);
+  recHit2DToken = consumes<DTRecSegment2DCollection>(theRecHits2DLabel);
+  recHitToken = consumes<DTRecHitCollection>(theRecHitLabel);
+  muonToken = consumes<reco::MuonCollection>(theMuonLabel);
+  cout << vertexToken.index() << endl;
+  vertexToken = consumes<reco::VertexCollection>(edm::InputTag("goodPrimaryVertices"));
+  cout << vertexToken.index() << endl;
 
   checkNoisyChannels = pset.getUntrackedParameter<bool>("checkNoisyChannels","false");
   algoName = pset.getParameter<string>("recAlgo");
@@ -149,25 +146,23 @@ void DTTreeBuilder::analyze(const Event& event, const EventSetup& setup) {
 
   if (theUpdator) theUpdator->setES(setup);
 
+  cout << vertexToken.index() << endl;
+  edm::Handle<reco::VertexCollection> vertex; 
+  event.getByToken(vertexToken,vertex);
 
   // Get the 4D segment collection from the event
   edm::Handle<DTRecSegment4DCollection> all4DSegments;
-  event.getByLabel(theRecHits4DLabel, all4DSegments);
+  event.getByToken(recHit4DToken,all4DSegments);
 
   // Get the 2D segment collection from the event
   edm::Handle<DTRecSegment2DCollection> all2DSegments;
   if (theRecHits2DLabel!="") {
-    event.getByLabel(theRecHits2DLabel, all2DSegments);
+    event.getByToken(recHit2DToken,all2DSegments);
   }
   
   // Get the DT rechit collection from the event
   Handle<DTRecHitCollection> dtRecHits;
-  event.getByLabel(theRecHitLabel, dtRecHits);
-
-
-  edm::Handle<reco::VertexCollection> vertex; 
-  event.getByLabel("goodPrimaryVertices", vertex);
-
+  event.getByToken(recHitToken,dtRecHits);
   // Get the DT Geometry
   ESHandle<DTGeometry> dtGeom;
   setup.get<MuonGeometryRecord>().get(dtGeom);
@@ -686,7 +681,7 @@ void DTTreeBuilder::analyze(const Event& event, const EventSetup& setup) {
   // Look at muons -----------------------------------------------------------------------------
 
   Handle<MuonCollection> muons;
-  event.getByLabel(theMuonLabel, muons);
+  event.getByToken(muonToken,muons);
 
   int muCounter = 0;
 

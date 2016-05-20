@@ -18,9 +18,27 @@
  *  \author G. Cerminara - INFN Torino
  */
 
+#include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "DataFormats/MuonDetId/interface/DTLayerId.h"
 #include <FWCore/Framework/interface/ESHandle.h>
+#include "FWCore/Framework/interface/ConsumesCollector.h"
+
+//Hack to be able to call DTRecSegment2D::update and DTRecSegment4D::phiSegment
+#define protected public
+#include "DataFormats/DTRecHit/interface/DTRecSegment2D.h"
+#undef protected
+#define private public
+#include "DataFormats/DTRecHit/interface/DTRecSegment4D.h"
+#undef private
+
+#include "DataFormats/DTRecHit/interface/DTRecSegment4DCollection.h"
+#include "DataFormats/DTRecHit/interface/DTRecSegment2DCollection.h"
+#include "DataFormats/DTRecHit/interface/DTRecHitCollection.h"
+#include "DataFormats/VertexReco/interface/VertexFwd.h"
+#include "DataFormats/VertexReco/interface/Vertex.h"
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
 
 #include <string>
 #include <vector>
@@ -37,7 +55,7 @@ class DTRecHitBaseAlgo;
 class DTMtime;
 class DTSegmentUpdator;
 
-class DTTreeBuilder {
+class DTTreeBuilder : public edm::EDAnalyzer {
 public:
   /// Constructor
   DTTreeBuilder(const edm::ParameterSet& pset, TFile* file);
@@ -65,6 +83,12 @@ private:
   std::string theRecHitLabel;
   // Label of muon collection in the event
   std::string theMuonLabel;
+
+  edm::EDGetTokenT<DTRecSegment4DCollection> recHit4DToken;
+  edm::EDGetTokenT<DTRecSegment2DCollection> recHit2DToken;
+  edm::EDGetTokenT<DTRecHitCollection> recHitToken;
+  edm::EDGetTokenT<reco::MuonCollection> muonToken;
+  edm::EDGetTokenT<reco::VertexCollection> vertexToken;
   
   // Switch for checking of noisy channels
   bool checkNoisyChannels;
