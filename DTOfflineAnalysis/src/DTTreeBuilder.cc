@@ -17,10 +17,6 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 // #include "Geometry/Vector/interface/Pi.h"
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/MakerMacros.h"
-#include "FWCore/Framework/interface/ConsumesCollector.h"
 
 #include "RecoLocalMuon/DTSegment/src/DTSegmentUpdator.h"
 #include "RecoLocalMuon/DTRecHit/interface/DTRecHitAlgoFactory.h"
@@ -63,14 +59,13 @@ using namespace reco;
 bool refitReferenceSegment = false;
 
 
-DTTreeBuilder::DTTreeBuilder(const ParameterSet& pset, TFile* file) : 
+DTTreeBuilder::DTTreeBuilder(const ParameterSet& pset,  edm::ConsumesCollector && iC, TFile* file) : 
   theFile(file),
   BX(-999),
   runN(-1),
   eventN(-1),
   theUpdator(0)
 {
-  ConsumesCollector collector(consumesCollector());
   debug = pset.getUntrackedParameter<bool>("debug","false");
   // the name of the 4D rec hits collection
   theRecHits4DLabel = pset.getParameter<string>("recHits4DLabel");
@@ -78,13 +73,11 @@ DTTreeBuilder::DTTreeBuilder(const ParameterSet& pset, TFile* file) :
   theRecHitLabel = pset.getParameter<string>("recHitLabel");
   theMuonLabel = pset.getParameter<string>("muonLabel");
 
-  recHit4DToken = consumes<DTRecSegment4DCollection>(theRecHits4DLabel);
-  recHit2DToken = consumes<DTRecSegment2DCollection>(theRecHits2DLabel);
-  recHitToken = consumes<DTRecHitCollection>(theRecHitLabel);
-  muonToken = consumes<reco::MuonCollection>(theMuonLabel);
-  cout << vertexToken.index() << endl;
-  vertexToken = consumes<reco::VertexCollection>(edm::InputTag("goodPrimaryVertices"));
-  cout << vertexToken.index() << endl;
+  recHit4DToken = iC.consumes<DTRecSegment4DCollection>(theRecHits4DLabel);
+  recHit2DToken = iC.consumes<DTRecSegment2DCollection>(theRecHits2DLabel);
+  recHitToken = iC.consumes<DTRecHitCollection>(theRecHitLabel);
+  muonToken = iC.consumes<reco::MuonCollection>(theMuonLabel);
+  vertexToken = iC.consumes<reco::VertexCollection>(edm::InputTag("goodPrimaryVertices"));
 
   checkNoisyChannels = pset.getUntrackedParameter<bool>("checkNoisyChannels","false");
   algoName = pset.getParameter<string>("recAlgo");
@@ -146,7 +139,6 @@ void DTTreeBuilder::analyze(const Event& event, const EventSetup& setup) {
 
   if (theUpdator) theUpdator->setES(setup);
 
-  cout << vertexToken.index() << endl;
   edm::Handle<reco::VertexCollection> vertex; 
   event.getByToken(vertexToken,vertex);
 

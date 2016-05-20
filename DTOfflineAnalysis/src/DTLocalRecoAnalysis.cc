@@ -15,6 +15,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 
 #include "TFile.h"
 // #include <DataFormats/DTDigi/interface/DTDigi.h>
@@ -50,7 +51,7 @@ DTLocalRecoAnalysis::DTLocalRecoAnalysis(const ParameterSet& pset) : theSegmentA
       new DTResolutionAnalysis(pset.getParameter<ParameterSet>("resolutionAnalysisConfig"), theFile);
   if(doTreeBuilder)
     theTreeBuilder =
-      new DTTreeBuilder(pset.getParameter<ParameterSet>("treeBuilderConfig"), theFile);
+      new DTTreeBuilder(pset.getParameter<ParameterSet>("treeBuilderConfig"), consumesCollector(), theFile);
 
 
 }

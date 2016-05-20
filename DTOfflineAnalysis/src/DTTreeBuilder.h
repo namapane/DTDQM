@@ -18,7 +18,6 @@
  *  \author G. Cerminara - INFN Torino
  */
 
-#include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "DataFormats/MuonDetId/interface/DTLayerId.h"
 #include <FWCore/Framework/interface/ESHandle.h>
@@ -55,10 +54,10 @@ class DTRecHitBaseAlgo;
 class DTMtime;
 class DTSegmentUpdator;
 
-class DTTreeBuilder : public edm::EDAnalyzer {
+class DTTreeBuilder {
 public:
   /// Constructor
-  DTTreeBuilder(const edm::ParameterSet& pset, TFile* file);
+  DTTreeBuilder(const edm::ParameterSet& pset, edm::ConsumesCollector && iC, TFile* file);
 
   /// Destructor
   virtual ~DTTreeBuilder();
