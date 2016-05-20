@@ -1,3 +1,3 @@
 {
-  gSystem->Load("$CMSSW_BASE/lib/slc6_amd64_gcc491/libDTOfflineAnalysisEvent.so");
+  //  gSystem->Load("$CMSSW_BASE/lib/$SCRAM_ARCH/libDTOfflineAnalysisEvent.so");
 }

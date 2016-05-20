@@ -1,3 +1,8 @@
+/*
+ * Plot 5x4 (WxSt) tables of various quantities
+ */
+
+
 #include <TH1F.h>
 #include <TH2F.h>
 #include <TF1.h>
@@ -18,6 +23,9 @@ using namespace std;
 #include "DQM/DTOfflineAnalysis/test/root_lib/DTDetId.h"
 #include "ranges.C"
 #include "summaryPlot.C"
+
+//Works since root 6.04; the lib must be loaded by hand or with rootlogon.C in previous versions
+R__LOAD_LIBRARY(libDTOfflineAnalysisEvent) 
 
 
 void plotAllWS(TString filename, int sector, int sl) {

@@ -18,6 +18,11 @@
 
 #include <iostream>
 
+
+//Works since root 6.04; the lib must be loaded by hand or with rootlogon.C in previous versions
+R__LOAD_LIBRARY(libDTOfflineAnalysisEvent) 
+
+
 using namespace std;
 
 void plot(TString filename, TString cut, int wheel, int station, int sector=0, int layer=0, int thetaSL=1) {

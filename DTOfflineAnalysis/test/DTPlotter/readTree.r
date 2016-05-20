@@ -30,7 +30,8 @@
 #include "TLorentzVector.h"
 #include <iostream>
 
-// R__LOAD_LIBRARY(libDTOfflineAnalysisEvent) Will work in root 6.04
+//Works since root 6.04; the lib must be loaded by hand or with rootlogon.C in previous versions
+R__LOAD_LIBRARY(libDTOfflineAnalysisEvent)
 
 
 using namespace std;
