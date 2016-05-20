@@ -45,7 +45,8 @@ from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #execfile("files_RelValZMM5312.py")                                       # Z RelVal, 5X
 #execfile("files_RelValZMM700p4.py")                                      # Z RelVal, 7X
 #execfile("files_ZMu_2015D.py")                                  # 2015D-v3
-execfile("files_ZMu_2015Dv4.py")                                 # 2015D-v4
+#execfile("files_ZMu_2015Dv4.py")                                # 2015D-v4
+execfile("files_ZMu_2016Bv2.py")                                 # 2016B-v2
 
 
 # Override the GT set in flies above to use IDEAL MC
@@ -56,7 +57,7 @@ execfile("files_ZMu_2015Dv4.py")                                 # 2015D-v4
 process.source.inputCommands = cms.untracked.vstring("keep *", "drop *_MEtoEDMConverter_*_*", "drop L1GlobalTriggerObjectMapRecord_hltL1GtObjectMap__HLT", "drop l1extra*_*_*_*")
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(5000)
     )
 
 
@@ -173,6 +174,7 @@ if (False) :
     process.p = cms.Path(process.validation + process.dqmSaver)
 
 
-if (not isMC) :
-    execfile("json_2015_25ns_MuonPhys.py")
+# JSON
+#if (not isMC) :
+#    execfile("json_2015_25ns_MuonPhys.py")
 
