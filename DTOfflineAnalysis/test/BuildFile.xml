@@ -4,5 +4,6 @@
 
 
 <library   file="root_lib/*.cc" name="DTOfflineAnalysisEvent">
-  <use   name="roofit"/>
+  <use name ="DQM/DTOfflineAnalysis"/>
+  <use name="roofit"/>
 </library>

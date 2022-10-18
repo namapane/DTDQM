@@ -39,6 +39,18 @@
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/MuonReco/interface/MuonFwd.h"
 
+#include "Geometry/Records/interface/MuonGeometryRecord.h"
+#include "Geometry/DTGeometry/interface/DTGeometry.h"
+
+#include <CondFormats/DataRecord/interface/DTTtrigRcd.h>
+#include "CondFormats/DataRecord/interface/DTT0Rcd.h"
+#include "CondFormats/DataRecord/interface/DTMtimeRcd.h"
+#include "CondFormats/DataRecord/interface/DTStatusFlagRcd.h"
+#include <CondFormats/DTObjects/interface/DTTtrig.h>
+#include "CondFormats/DTObjects/interface/DTT0.h"
+#include "CondFormats/DTObjects/interface/DTMtime.h"
+#include "CondFormats/DTObjects/interface/DTStatusFlag.h"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -89,6 +101,12 @@ private:
   edm::EDGetTokenT<reco::MuonCollection> muonToken;
   edm::EDGetTokenT<reco::VertexCollection> vertexToken;
   
+  edm::ESGetToken<DTGeometry, MuonGeometryRecord> dtGeomToken_;
+  edm::ESGetToken<DTTtrig, DTTtrigRcd> dtTTrigToken_;
+  edm::ESGetToken<DTT0, DTT0Rcd> dtT0Token_;
+  edm::ESGetToken<DTMtime, DTMtimeRcd> dtMtimeToken_;
+  edm::ESGetToken<DTStatusFlag,DTStatusFlagRcd> dtStatusToken_;
+
   // Switch for checking of noisy channels
   bool checkNoisyChannels;
 
@@ -101,13 +119,10 @@ private:
   //  int pix;
   int runN;
   int eventN;
-  edm::ESHandle<DTTtrig> tTrigMap;
-  edm::ESHandle<DTT0> t0Handle;
-  edm::ESHandle<DTMtime> mTimeHandle;
   
 
   // Algo to re-reco the hits
-  DTRecHitBaseAlgo *theAlgo;
+  std::unique_ptr<DTRecHitBaseAlgo> theAlgo;
   std::string algoName;
   
   // Helper to refit segments

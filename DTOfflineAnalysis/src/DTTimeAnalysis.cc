@@ -14,6 +14,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 
 
 #include "TFile.h"
@@ -43,10 +44,10 @@ DTTimeAnalysis::DTTimeAnalysis(const ParameterSet& pset) : theTimeBoxAnalysis(0)
   // Create the classes which really make the analysis
   if(doTimeBoxAnalysis)
     theTimeBoxAnalysis =
-      new DTTimeBoxAnalysis(pset.getParameter<ParameterSet>("timeBoxAnalysisConfig"), theFile);
+      new DTTimeBoxAnalysis(pset.getParameter<ParameterSet>("timeBoxAnalysisConfig"), theFile, consumesCollector());
   if(doTimeBoxMeanTimerAnalysis)
     theTimeBoxMeanTimerAnalysis =
-      new DTTimeBoxMeanTimerAnalysis(pset.getParameter<ParameterSet>("timeBoxMeanTimerAnalysisConfig"), theFile);
+      new DTTimeBoxMeanTimerAnalysis(pset.getParameter<ParameterSet>("timeBoxMeanTimerAnalysisConfig"), theFile, consumesCollector());
 }
 
 DTTimeAnalysis::~DTTimeAnalysis(){

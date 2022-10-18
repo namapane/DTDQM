@@ -14,6 +14,8 @@
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "DataFormats/MuonDetId/interface/DTSuperLayerId.h"
 #include "DataFormats/MuonDetId/interface/DTLayerId.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
+
 
 #include <string>
 #include <map>
@@ -34,7 +36,7 @@ class DTTtrig;
 class DTTimeBoxAnalysis{
 public:
   /// Constructor
-  DTTimeBoxAnalysis(const edm::ParameterSet& pset, TFile* file);
+  DTTimeBoxAnalysis(const edm::ParameterSet& pset, TFile* file, edm::ConsumesCollector && cc);
 
   /// Destructor
   virtual ~DTTimeBoxAnalysis();
@@ -76,7 +78,7 @@ private:
   // The fitter
   DTTimeBoxFitter *theFitter;
   // The module for t0 subtraction
-  DTTTrigBaseSync *theSync;//FIXME: should be const
+  std::unique_ptr<DTTTrigBaseSync> theSync;
 
 };
 #endif

@@ -10,7 +10,7 @@
  *
 */
 
-#include <FWCore/Framework/interface/EDAnalyzer.h>
+#include <FWCore/Framework/interface/one/EDAnalyzer.h>
 
 
 #include <string>
@@ -24,7 +24,7 @@ class DTResolutionAnalysis;
 class DTTreeBuilder;
 class TFile;
 
-class DTLocalRecoAnalysis: public edm::EDAnalyzer{
+class DTLocalRecoAnalysis: public edm::one::EDAnalyzer<>{
 
 public:
 

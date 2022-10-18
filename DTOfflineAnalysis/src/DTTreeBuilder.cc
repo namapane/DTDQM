@@ -21,18 +21,7 @@
 #include "RecoLocalMuon/DTSegment/src/DTSegmentUpdator.h"
 #include "RecoLocalMuon/DTRecHit/interface/DTRecHitAlgoFactory.h"
 
-#include "Geometry/DTGeometry/interface/DTGeometry.h"
-#include "Geometry/Records/interface/MuonGeometryRecord.h"
 #include "TrackingTools/GeomPropagators/interface/StraightLinePlaneCrossing.h"
-
-#include "CondFormats/DataRecord/interface/DTStatusFlagRcd.h"
-#include "CondFormats/DTObjects/interface/DTStatusFlag.h"
-#include <CondFormats/DTObjects/interface/DTTtrig.h>
-#include <CondFormats/DataRecord/interface/DTTtrigRcd.h>
-#include "CondFormats/DTObjects/interface/DTT0.h"
-#include "CondFormats/DataRecord/interface/DTT0Rcd.h"
-#include "CondFormats/DataRecord/interface/DTMtimeRcd.h"
-#include "CondFormats/DTObjects/interface/DTMtime.h"
 
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
@@ -79,13 +68,19 @@ DTTreeBuilder::DTTreeBuilder(const ParameterSet& pset,  edm::ConsumesCollector &
   muonToken = iC.consumes<reco::MuonCollection>(theMuonLabel);
   vertexToken = iC.consumes<reco::VertexCollection>(edm::InputTag("goodPrimaryVertices"));
 
+  dtGeomToken_= iC.esConsumes();
+  dtTTrigToken_ = iC.esConsumes();
+  dtT0Token_ = iC.esConsumes();
+  dtMtimeToken_ = iC.esConsumes();
+  dtStatusToken_ = iC.esConsumes();
+
   checkNoisyChannels = pset.getUntrackedParameter<bool>("checkNoisyChannels","false");
   algoName = pset.getParameter<string>("recAlgo");
-  theAlgo = DTRecHitAlgoFactory::get()->create(algoName,pset.getParameter<ParameterSet>("recAlgoConfig"));
+  theAlgo = DTRecHitAlgoFactory::get()->create(algoName,pset.getParameter<ParameterSet>("recAlgoConfig"), iC);
 
   if (refitReferenceSegment) { 
   // updator to refit the segment used as a reference to define residuals
-    theUpdator = new DTSegmentUpdator(pset.getParameter<ParameterSet>("segmentUpdatorConfig"));
+    theUpdator = new DTSegmentUpdator(pset.getParameter<ParameterSet>("segmentUpdatorConfig"), iC);
 
     // Fill List of layers to be excluded from the segment refit (suspect alignment ouliers) 
     // when refitReferenceSegment == true
@@ -157,20 +152,21 @@ void DTTreeBuilder::analyze(const Event& event, const EventSetup& setup) {
   event.getByToken(recHitToken,dtRecHits);
   // Get the DT Geometry
   ESHandle<DTGeometry> dtGeom;
-  setup.get<MuonGeometryRecord>().get(dtGeom);
-  
+  dtGeom = setup.getHandle(dtGeomToken_);
+
   // Get the map of noisy channels
   ESHandle<DTStatusFlag> statusMap;
   if(checkNoisyChannels) {
-    setup.get<DTStatusFlagRcd>().get(statusMap);
+    statusMap=setup.getHandle(dtStatusToken_);
   }
 
-  setup.get<DTTtrigRcd>().get(tTrigMap);
-  setup.get<DTT0Rcd>().get(t0Handle);
+  ESHandle<DTTtrig> tTrigMap;
+  ESHandle<DTT0> t0Handle;
+  ESHandle<DTMtime> mTimeHandle;
 
-
-  // Get the map of ttrig from the Setup
-  setup.get<DTMtimeRcd>().get(mTimeHandle);
+  tTrigMap=setup.getHandle(dtTTrigToken_);
+  t0Handle=setup.getHandle(dtT0Token_);
+  mTimeHandle=setup.getHandle(dtMtimeToken_);
   const DTMtime *mTimeMap = &*mTimeHandle;
 
 

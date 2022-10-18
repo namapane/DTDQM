@@ -4,35 +4,51 @@
 //
 // only *ByLayer is acceptable 
 //
-// root -q -b writeSummaryTable_sigma.r
+// Run:
+// root -q -b 'writeSummaryTable_sigma.r("ZMu_2022E_statByLayer.root")'
+// root -q -b 'writeSummaryTable_sigma.r("ZMu_2022E_chamberByLayer.root")'
 //
 //
 //------------------------------
+#include <TH1F.h>
+#include <TH2F.h>
+#include <TF1.h>
+#include <TLine.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TProfile.h>
+#include <TFile.h>
+#include <TColor.h>
+#include <iostream>
+#include <fstream>
 #include <iomanip>
 
-void writeSummaryTable_sigma() {
+#include "DQM/DTOfflineAnalysis/test/root_lib/Utils.h"
+#include "macros2.C"
+#include "DQM/DTOfflineAnalysis/test/root_lib/Histograms.h"
+#include "DQM/DTOfflineAnalysis/test/root_lib/DTDetId.h"
 
-  gROOT->LoadMacro("macros2.C");
-  gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Histograms.h");
-  gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/DTDetId.cc+");
-  gROOT->LoadMacro("$CMSSW_BASE/src/DQM/DTOfflineAnalysis/test/root_lib/Utils.cc+");
-  
+
+using namespace std;
+
+R__LOAD_LIBRARY(libDTOfflineAnalysisEvent)
+
+void writeSummaryTable_sigma(TString filename) {  
 
   // Configurable parameters --------------------
 
   //--- DATA:
   bool isMC = false;
+  
+  TString table = "sigma_"+filename;
+  table.ReplaceAll(".root",".txt");
 
-//   TString filename = "ZMu_2012D_22jan13_BP7X_noDRR_statByLayer.root";
-//   TString table = "sigma_2012D_22jan13_BP7X_noDRR_statByLayer.txt";
 
-  TString filename = "DYJetsToLL_M-50_BP7X_noDRR_statByLayer.root";
-  TString table = "sigma_DYJetsToLL_M-50_BP7X_noDRR_statByLayer.txt";
-
+  TString granularity;
   if (filename.Contains("chamberByLayer")) {
-    TString granularity = "SL";  // sectors independently, for chamberByLayer
+    granularity = "SL";  // sectors independently, for chamberByLayer
   } else if  (filename.Contains("statByLayer")) {
-    TString granularity = "stat";    // collapse sectors; for statByLayer
+    granularity = "stat";    // collapse sectors; for statByLayer
   } else {
     cout << "unknown granularity, exiting..." << endl;
     return;

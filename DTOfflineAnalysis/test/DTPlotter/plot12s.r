@@ -1,3 +1,4 @@
+
 /*
  * Plot residuals for all 12 sectors of a given W,St,Sl,l
  */
@@ -48,8 +49,8 @@ void plot12s(TString filename, int wheel, int station, int sl, int layer=0) {
   float nsigma = 2;
 
   
-
-  TCanvas* c1= new TCanvas("c1",filename+"_Theta",1100,800);
+  TString name = filename+"_W"+wheel+"_St"+station+"_SL"+sl;
+  TCanvas* c1= new TCanvas(name,name,1100,800);
   c1->Divide(4,3);
   
 
@@ -57,6 +58,10 @@ void plot12s(TString filename, int wheel, int station, int sl, int layer=0) {
     c1->cd(sector);
     hResTheta[sector]->hResDist->Rebin(2);
     //    hResTheta[sector]->hResDist->SetTitle("");
-    TF1* fphi=drawGFit(hResTheta[sector]->hResDist, nsigma, -0.3, 0.3); 
+    TF1* fphi=drawGFit(hResTheta[sector]->hResDist, nsigma, -0.3, 0.3);
+    cout << "sector " << sector 
+	 << " mean=" << fphi->GetParameter("Mean")*1e4
+	 << " sigma=" << fphi->GetParameter("Sigma")*1e4 << endl;
+ 
   }
 }

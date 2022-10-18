@@ -19,6 +19,7 @@
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "DataFormats/MuonDetId/interface/DTSuperLayerId.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 
 #include <string>
 #include <vector>
@@ -33,7 +34,7 @@ class TH1F;
 class DTTimeBoxMeanTimerAnalysis {
 public:
   /// Constructor
-  DTTimeBoxMeanTimerAnalysis(const edm::ParameterSet& pset, TFile* file);
+  DTTimeBoxMeanTimerAnalysis(const edm::ParameterSet& pset, TFile* file, edm::ConsumesCollector && cc);
 
   /// Destructor
   virtual ~DTTimeBoxMeanTimerAnalysis();
@@ -77,7 +78,7 @@ private:
   // Switch for checking of noisy channels
   bool checkNoisyChannels;
  // The module for t0 subtraction
-  DTTTrigBaseSync *theSync;
+  std::unique_ptr<DTTTrigBaseSync> theSync;
 };
 #endif
 

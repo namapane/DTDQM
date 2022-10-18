@@ -1,0 +1,5 @@
+<lcgdict>
+  <class name="DTHitObject"/>
+  <class name="DTSegmentObject"/>
+  <class name="DTMuObject"/>
+</lcgdict>

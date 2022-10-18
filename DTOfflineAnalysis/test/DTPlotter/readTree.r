@@ -17,12 +17,16 @@
 //
 //----------------------------------------------------------------------
 
+//Load library; Must stay before the first #include.
+R__LOAD_LIBRARY(libDTOfflineAnalysisEvent)
+
+
 
 #include "TFile.h"
 #include "TTree.h"
 #include "TClonesArray.h"
-#include "DQM/DTOfflineAnalysis/test/root_lib/DTSegmentObject.h"
-#include "DQM/DTOfflineAnalysis/test/root_lib/DTHitObject.h"
+// #include "DQM/DTOfflineAnalysis/test/root_lib/DTSegmentObject.h"
+// #include "DQM/DTOfflineAnalysis/test/root_lib/DTHitObject.h"
 #include "DQM/DTOfflineAnalysis/test/root_lib/TTreeReader.h"
 
 #include "TSystem.h"
@@ -30,11 +34,10 @@
 #include "TLorentzVector.h"
 #include <iostream>
 
-//Works since root 6.04; the lib must be loaded by hand or with rootlogon.C in previous versions
-R__LOAD_LIBRARY(libDTOfflineAnalysisEvent)
-
-
 using namespace std;
+
+
+
 
 int NEVENTS = -1;
 int debug = 0;

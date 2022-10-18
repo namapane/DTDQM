@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/bin/env python3
 #import sys
 import imp
 import copy
@@ -12,67 +12,83 @@ def chunks(l, n):
     return [l[i:i+n] for i in range(0, len(l), n)]
 
 
+def condorSubScript( index, mainDir ):
+   '''prepare the Condor submition script'''
+   script = '''
+executable              = $(directory)/batchScript.sh
+arguments               = {mainDir}/$(directory) $(ClusterId)$(ProcId)
+output                  = log/$(ClusterId).$(ProcId).out
+error                   = log/$(ClusterId).$(ProcId).err
+log                     = log/$(ClusterId).log
+Initialdir              = $(directory)
+request_memory          = 0
+#Possible values: https://batchdocs.web.cern.ch/local/submit.html
++JobFlavour             = longlunch
+
+x509userproxy           = {home}/x509up_u{uid}
+
+#https://www-auth.cs.wisc.edu/lists/htcondor-users/2010-September/msg00009.shtml
+periodic_remove         = JobStatus == 5
+
+ShouldTransferFiles     = NO
+'''   
+   return script.format(home=os.path.expanduser("~"), uid=os.getuid(), mainDir=mainDir)
+
+
 def batchScriptCERN( index, remoteDir=''):
-   '''prepare the LSF version of the batch script, to run on LSF'''
+   '''prepare the Condor version of the batch script, to run on HTCondor'''
 #   print "INDEX", index
 #   print "remotedir", remoteDir
-   script = """#!/bin/tcsh
-#BSUB -q 8nh
-#BSUB -o job_%J.txt
-#ulimit -v 3000000
-limit
-cat /proc/cpuinfo
-cat /proc/meminfo
-cd $CMSSW_BASE/src
-cmsenv
-cd -
-echo 'Environment:'
-echo
-env
-echo
-echo 'Copying' ${LS_SUBCWD} to ${PWD} 
-cp -rf $LS_SUBCWD .
-echo '...done'
-echo
-echo Workdir content:
-ls -l
-echo
-cd `find . -type d | grep /`
-pwd
-echo 'Running at:' `date`
-cmsRun run_cfg.py >& log.txt
-set cmsRunStatus=$?
-echo 'cmsRun done at: ' `date` with exit status: $cmsRunStatus
-if ( $cmsRunStatus != 0 ) echo $cmsRunStatus > exitStatus.txt
+   script = """#!/bin/bash
+set -euo pipefail
+
+if [ -z ${_CONDOR_SCRATCH_DIR+x} ]; then
+  #running locally
+  runninglocally=true
+  _CONDOR_SCRATCH_DIR=$(mktemp -d)
+  SUBMIT_DIR=$(pwd)
+else
+  runninglocally=false
+  SUBMIT_DIR=$1
+fi
+
+cd $SUBMIT_DIR
+eval $(scram ru -sh)
+
+cp run_cfg.py $_CONDOR_SCRATCH_DIR
+cd $_CONDOR_SCRATCH_DIR
+
+echo 'Running at:' $(date)
+echo path: `pwd`
+
+cmsRunStatus=   #default for successful completion is an empty file
+cmsRun run_cfg.py |& grep -v -e 'MINUIT WARNING' -e 'Second derivative zero' -e 'Negative diagonal element' -e 'added to diagonal of error matrix' > log.txt || cmsRunStatus=$?
+
+echo -n $cmsRunStatus > exitStatus.txt
+echo 'cmsRun done at: ' $(date) with exit status: ${cmsRunStatus+0}
 gzip log.txt
-echo
-echo 'ls: '
-pwd
-ls -l
-echo
-echo 'Sending the job directory back...'
-cp *.root *.txt *.gz $LS_SUBCWD
-if ( -z DTLocalReco.root ) then
- echo 'Empty file:  DTLocalReco.root'
- if ( -s DTLocalReco.root ) then
-   echo Retrying...
-   sleep 10
-   cp *.root $LS_SUBCWD
- endif
-endif
-echo 'destination dir: ls: '
-cd $LS_SUBCWD
-pwd
-ls -l 
-setenv ROOT_HIST 0
-if ( -s DTLocalReco.root ) then
+
+export ROOT_HIST=0
+if [ -s DTLocalReco.root ]; then
  root -q -b '${CMSSW_BASE}/src/DQM/DTOfflineAnalysis/test/fillTree/rootFileIntegrity.r(\"DTLocalReco.root\")'
 else
  echo moving empty file
  mv DTLocalReco.root DTLocalReco.root.empty
-endif
+fi
 
-echo '...done at' `date`
+echo "Files on node:"
+ls -la
+
+#delete submission scripts, so that they are not copied back (which fails sometimes)
+rm -f run_cfg.py batchScript.sh
+
+echo '...done at' $(date)
+
+#note cping back is handled automatically by condor
+if $runninglocally; then
+  cp DTLocalReco.root* *.txt *.gz $SUBMIT_DIR
+fi
+
 exit $cmsRunStatus
 """ 
    return script
@@ -84,7 +100,7 @@ if __name__ == '__main__':
     cfgFileName = "fillDTTree_rereco.py"
     batchSet=""
     jobName = "Chunk"
-    numFiles = 5
+    numFiles = 25
 
     if batchSet != "" :
         os.mkdir(batchSet)
@@ -98,14 +114,20 @@ if __name__ == '__main__':
     fullList = copy.deepcopy(cfo.process.source.fileNames)
 
     fileBlocks =  chunks(fullList,numFiles)
+
+
+    condorscriptFileName = os.path.join(os.getcwd(), 'condor.sub')
+    with open(condorscriptFileName,'w') as condorscriptFile:
+        condorscriptFile.write(condorSubScript(0, os.getcwd()))
     
 
     i=0
     for files in fileBlocks :
        jobDir=jobName+"_"+str(i)
-       print jobDir
+       print(jobDir)
        path = batchSet+"/"+jobDir
        os.mkdir(path)
+       os.mkdir( jobDir + '/log' )
        cfo.process.source.fileNames = files
        cfo.process.maxEvents.input = -1
        i=i+1
@@ -117,4 +139,5 @@ if __name__ == '__main__':
        scriptFile = open(path+'/batchScript.sh','w')
        scriptFile.write( batchScriptCERN( i ) )
        scriptFile.close()
-       os.system('cp *.db '+path)
+       if os.path.exists('*.db') :
+           os.system('cp *.db '+path)

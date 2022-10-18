@@ -36,7 +36,7 @@
 using namespace edm;
 using namespace std;
 
-DTTimeBoxMeanTimerAnalysis::DTTimeBoxMeanTimerAnalysis(const ParameterSet& pset, TFile* file) : theFile(file) {
+DTTimeBoxMeanTimerAnalysis::DTTimeBoxMeanTimerAnalysis(const ParameterSet& pset, TFile* file, ConsumesCollector && cc) : theFile(file) {
   debug = pset.getUntrackedParameter<bool>("debug","false");
   // the name of the 4D rec hits collection
   theRecHits4DLabel = pset.getParameter<string>("recHits4DLabel");
@@ -46,9 +46,9 @@ DTTimeBoxMeanTimerAnalysis::DTTimeBoxMeanTimerAnalysis(const ParameterSet& pset,
   // Get the synchronizer
   if(doSubtractT0) {
   theSync = DTTTrigSyncFactory::get()->create(pset.getParameter<string>("tTrigMode"),
-						pset.getParameter<ParameterSet>("tTrigModeConfig"));
+					      pset.getParameter<ParameterSet>("tTrigModeConfig"), cc);
   }else {
-    theSync = 0;
+    theSync = nullptr;
   }
 
   checkNoisyChannels = pset.getUntrackedParameter<bool>("checkNoisyChannels","false");

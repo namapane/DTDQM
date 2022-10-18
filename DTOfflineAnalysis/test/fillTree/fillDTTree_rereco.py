@@ -15,7 +15,7 @@ ALIGNMENT = ""           #alignment .db to use
  
 ######################################################################
 import os
-print 'Working in: ', os.environ['CMSSW_BASE']
+print('Working in:', os.environ['CMSSW_BASE'])
 
 process = cms.Process("DTOffAna")
 
@@ -32,11 +32,13 @@ process.options = cms.untracked.PSet(
     )
 
 
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
-from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff') # up to CMSSW_10
+#from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+from Configuration.AlCa.GlobalTag import GlobalTag
                               
 ################### Set input samples
-
+from past.builtins import execfile
 #execfile("files_ZMu-22Jan2013-v1.py")                                    # Data
 #execfile("files_710pre4_RelVal_zMu2012D.py")                        # Data 71X
 #execfile("files_710pre5_RelVal_zMu2012D.py")                        # Data 71X
@@ -46,7 +48,9 @@ from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #execfile("files_RelValZMM700p4.py")                                      # Z RelVal, 7X
 #execfile("files_ZMu_2015D.py")                                  # 2015D-v3
 #execfile("files_ZMu_2015Dv4.py")                                # 2015D-v4
-execfile("files_ZMu_2016Bv2.py")                                 # 2016B-v2
+#execfile("files_ZMu_2016Bv2.py")                                 # 2016B-v2
+#execfile("files_ZMu_2018Bv1.py")
+execfile("files_ZMu_2022Ev1.py")
 
 
 # Override the GT set in flies above to use IDEAL MC
@@ -57,12 +61,12 @@ execfile("files_ZMu_2016Bv2.py")                                 # 2016B-v2
 process.source.inputCommands = cms.untracked.vstring("keep *", "drop *_MEtoEDMConverter_*_*", "drop L1GlobalTriggerObjectMapRecord_hltL1GtObjectMap__HLT", "drop l1extra*_*_*_*")
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(5000)
+    input = cms.untracked.int32(-1)
     )
 
 
 process.load("Configuration.StandardSequences.GeometryDB_cff")
-process.load("Configuration.StandardSequences.MagneticField_38T_cff")
+process.load("Configuration.StandardSequences.MagneticField_cff")
 
 
 if T0_CALIBRATION != "" :

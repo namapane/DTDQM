@@ -28,7 +28,6 @@
 #include "CondFormats/DataRecord/interface/DTStatusFlagRcd.h"
 #include "CondFormats/DTObjects/interface/DTStatusFlag.h"
 
-
 #include "TFile.h"
 #include "TH1F.h"
 
@@ -41,7 +40,7 @@ using namespace edm;
 
 
 // Constructor
-DTTimeBoxAnalysis::DTTimeBoxAnalysis(const edm::ParameterSet& pset, TFile* file) : theFile(file) {
+DTTimeBoxAnalysis::DTTimeBoxAnalysis(const edm::ParameterSet& pset, TFile* file, ConsumesCollector && cc) : theFile(file) {
   // Get the debug parameter for verbose output
   debug = pset.getUntrackedParameter<bool>("debug");
 
@@ -57,9 +56,9 @@ DTTimeBoxAnalysis::DTTimeBoxAnalysis(const edm::ParameterSet& pset, TFile* file)
   // Get the synchronizer
   if(doSubtractT0) {
     theSync = DTTTrigSyncFactory::get()->create(pset.getParameter<string>("tTrigMode"),
-						pset.getParameter<ParameterSet>("tTrigModeConfig"));
+						pset.getParameter<ParameterSet>("tTrigModeConfig"), cc);
   } else {
-    theSync = 0;
+    theSync = nullptr;
   }
 
   checkNoisyChannels = pset.getUntrackedParameter<bool>("checkNoisyChannels","false");
