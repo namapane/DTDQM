@@ -1,4 +1,13 @@
 #!/bin/tcsh -f
+###
+# statByView: "summary" 5x4 plots 
+# statByLayer, resoluton plots (merged sectors)
+# chamberByLayer: resoluton plots (all sectors)
+# SL: ttrig table
+#
+###
+
+
 
 # root -q -b 'readTree.r("~/work/DT/fillTree/prod/2012D_22jan13/chain.h", "ZMu_2012D_22jan13","statByView")'
 # root -q -b 'readTree.r("~/work/DT/fillTree/prod/2012D_22jan13/chain.h", "ZMu_2012D_22jan13","SL")'
@@ -77,7 +86,8 @@
 #root -q -b 'readTree.r ( "/data/DT/ZMu_2015Dv4_ttrig_256675_vDrift_259626/chain.h","ZMu_2015Dv4_ttrig_256675_vDrift_259626_until258442", "chamberByView" )'
 #root -q -b 'readTree.r ( "/data/DT/ZMu_2015Dv4_ttrig_256675_vDrift_259626/chain.h","ZMu_2015Dv4_ttrig_256675_vDrift_259626_since258446", "chamberByView" )'
 
-root -q -b 'readTree.r("/afs/cern.ch/work/n/namapane/DT/CMSSW_12_4_2/src/DQM/DTOfflineAnalysis/test/fillTree/chain.h", "ZMu_2022E","statByView")'
-root -q -b 'readTree.r("/afs/cern.ch/work/n/namapane/DT/CMSSW_12_4_2/src/DQM/DTOfflineAnalysis/test/fillTree/chain.h", "ZMu_2022E","chamberByView")'
-root -q -b 'readTree.r("/afs/cern.ch/work/n/namapane/DT/CMSSW_12_4_2/src/DQM/DTOfflineAnalysis/test/fillTree/chain.h", "ZMu_2022E","statByLayer")'
-root -q -b 'readTree.r("/afs/cern.ch/work/n/namapane/DT/CMSSW_12_4_2/src/DQM/DTOfflineAnalysis/test/fillTree/chain.h", "ZMu_2022E","SL")'
+
+root -q -b 'readTree.r("/afs/cern.ch/work/n/namapane/DT/CMSSW_12_4_2/src/DQM/DTOfflineAnalysis/test/fillTree/ZMu_2022E_ttrig2/chain.h", "ZMu_2022E_ttrig2","statByView")'
+root -q -b 'readTree.r("/afs/cern.ch/work/n/namapane/DT/CMSSW_12_4_2/src/DQM/DTOfflineAnalysis/test/fillTree/ZMu_2022E_ttrig2/chain.h", "ZMu_2022E_ttrig2","chamberByView")'
+root -q -b 'readTree.r("/afs/cern.ch/work/n/namapane/DT/CMSSW_12_4_2/src/DQM/DTOfflineAnalysis/test/fillTree/ZMu_2022E_ttrig2/chain.h", "ZMu_2022E_ttrig2","SL")'
+root -q -b 'readTree.r("/afs/cern.ch/work/n/namapane/DT/CMSSW_12_4_2/src/DQM/DTOfflineAnalysis/test/fillTree/ZMu_2022E_ttrig2/chain.h", "ZMu_2022E_ttrig2","statByLayer")'

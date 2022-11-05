@@ -3,6 +3,7 @@
 import imp
 import copy
 import os
+import glob
 import shutil
 #import pickle
 #import math
@@ -23,7 +24,7 @@ log                     = log/$(ClusterId).log
 Initialdir              = $(directory)
 request_memory          = 0
 #Possible values: https://batchdocs.web.cern.ch/local/submit.html
-+JobFlavour             = longlunch
++JobFlavour             = workday
 
 x509userproxy           = {home}/x509up_u{uid}
 
@@ -56,6 +57,8 @@ cd $SUBMIT_DIR
 eval $(scram ru -sh)
 
 cp run_cfg.py $_CONDOR_SCRATCH_DIR
+rsync -avhzq --ignore-missing-args *.db $_CONDOR_SCRATCH_DIR
+
 cd $_CONDOR_SCRATCH_DIR
 
 echo 'Running at:' $(date)
@@ -100,7 +103,7 @@ if __name__ == '__main__':
     cfgFileName = "fillDTTree_rereco.py"
     batchSet=""
     jobName = "Chunk"
-    numFiles = 25
+    numFiles = 20
 
     if batchSet != "" :
         os.mkdir(batchSet)
@@ -139,5 +142,5 @@ if __name__ == '__main__':
        scriptFile = open(path+'/batchScript.sh','w')
        scriptFile.write( batchScriptCERN( i ) )
        scriptFile.close()
-       if os.path.exists('*.db') :
+       if glob.glob("*.db") != [] :
            os.system('cp *.db '+path)

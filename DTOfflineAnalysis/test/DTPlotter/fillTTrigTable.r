@@ -33,6 +33,7 @@ using namespace std;
 
 float filter(float offset);
 
+float TOL = 0.01; // threshold for printing a warning
 
 // set granularity="SL" for "SL" or "ChamberBy*";  granularity="stat" for statBy*"
 void fillTTrigTable(TString filename, TString granularity = "SL") {
@@ -132,6 +133,10 @@ void fillTTrigTable(TString filename, TString granularity = "SL") {
 	     << " " <<  ttrig1;
 	if (station !=4) cout << " " <<  ttrig2;
 	cout << " " <<  ttrig3;
+	if (fabs(ttrig1) > TOL || fabs(ttrig2) > TOL || fabs(ttrig3)> TOL) {
+	  cout << " ***LARGE RESISUDAL***" << endl;
+	}
+
 	cout << endl;
 //	}
 	int secmin=1;

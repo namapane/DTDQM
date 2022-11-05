@@ -1,4 +1,3 @@
-
 import FWCore.ParameterSet.Config as cms
 
 ######################################################################
@@ -12,12 +11,14 @@ T0_CALIBRATION = ""      #ttrig .db to use
 TTRIG_CALIBRATION = ""   #ttrig .db to use
 VDRIFT_CALIBRATION = ""  #vdrift .db to use
 ALIGNMENT = ""           #alignment .db to use
- 
+JSON = "json_2022_355100_360491.py"
+
 ######################################################################
 import os
 print('Working in:', os.environ['CMSSW_BASE'])
 
-process = cms.Process("DTOffAna")
+from Configuration.StandardSequences.Eras import eras
+process = cms.Process("DTOffAna", eras.Run3)
 
 # the source
 process.source = cms.Source("PoolSource",
@@ -73,21 +74,21 @@ if T0_CALIBRATION != "" :
     process.GlobalTag.toGet.extend(cms.VPSet(
         cms.PSet(record = cms.string("DTT0Rcd"),
                  tag = cms.string("t0"),
-                 connect = cms.untracked.string("sqlite_file:"+T0_CALIBRATION))
+                 connect = cms.string("sqlite_file:"+T0_CALIBRATION))
         )
     )
 if TTRIG_CALIBRATION != "" :
     process.GlobalTag.toGet.extend(cms.VPSet(
         cms.PSet(record = cms.string("DTTtrigRcd"),
                  tag = cms.string("ttrig"),
-                 connect = cms.untracked.string("sqlite_file:"+TTRIG_CALIBRATION))
+                 connect = cms.string("sqlite_file:"+TTRIG_CALIBRATION))
         )
     )
 if VDRIFT_CALIBRATION != "" :
      process.GlobalTag.toGet.extend(cms.VPSet(
          cms.PSet(record = cms.string("DTMtimeRcd"),
                   tag = cms.string("vDrift"),
-                  connect = cms.untracked.string("sqlite_file:"+VDRIFT_CALIBRATION))
+                  connect = cms.string("sqlite_file:"+VDRIFT_CALIBRATION))
          )
     )
 
@@ -144,7 +145,7 @@ process.dtLocalRecoAnal.rootFileName = 'DTLocalReco.root'
 if reReco :
     if fromRAW: ### redigi + rereco, from RAW
 #        process.jobPath = cms.Path(process.goodPrimaryVertices*process.muonDTDigis*process.dtlocalreco+process.dt2DSegments+process.muonreco+process.dtLocalRecoAnal)
-        process.jobPath = cms.Path(process.goodPrimaryVertices*process.muonDTDigis*process.dtlocalreco+process.dt2DSegments+process.dtLocalRecoAnal) ### FIXME: without muon reco
+        process.jobPath = cms.Path(process.goodPrimaryVertices+process.muonDTDigis+process.dtlocalreco_with_2DSegments+process.dtLocalRecoAnal) ### FIXME: without muon reco
     else: ### re-reconstruct segments from rechits
         process.dt4DSegments.Reco4DAlgoConfig.recAlgoConfig.stepTwoFromDigi = True
         process.dt4DSegments.Reco4DAlgoConfig.Reco2DAlgoConfig.recAlgoConfig.stepTwoFromDigi = True
@@ -179,6 +180,6 @@ if (False) :
 
 
 # JSON
-#if (not isMC) :
-#    execfile("json_2015_25ns_MuonPhys.py")
+if (not isMC and JSON != "") :
+    execfile(JSON)
 
