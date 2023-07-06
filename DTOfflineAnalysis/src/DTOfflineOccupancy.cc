@@ -13,7 +13,6 @@
 // Framework
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
-#include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include <DataFormats/DTDigi/interface/DTDigiCollection.h>
 #include "DataFormats/DTRecHit/interface/DTRecHitCollection.h"
@@ -22,8 +21,6 @@
 //Geometry
 #include "DataFormats/GeometryVector/interface/Pi.h"
 #include "DataFormats/MuonDetId/interface/DTChamberId.h"
-#include "Geometry/DTGeometry/interface/DTGeometry.h"
-#include "Geometry/Records/interface/MuonGeometryRecord.h"
 
 //RecHit
 #include "DataFormats/DTRecHit/interface/DTRecSegment4DCollection.h"
@@ -35,7 +32,8 @@
 using namespace edm;
 using namespace std;
 
-DTOfflineOccupancy::DTOfflineOccupancy(const edm::ParameterSet& pset) : nEvents(0) {
+DTOfflineOccupancy::DTOfflineOccupancy(const edm::ParameterSet& pset) : nEvents(0), 
+									esTokenDTGeom(esConsumes()) {
 
   debug = pset.getUntrackedParameter<bool>("debug","false");
   if(debug)
@@ -294,10 +292,7 @@ void DTOfflineOccupancy::analyze(const edm::Event& event, const edm::EventSetup&
 
 
   // Get the DT Geometry
-  ESHandle<DTGeometry> dtGeom;
-  setup.get<MuonGeometryRecord>().get(dtGeom);
-  
-
+  const DTGeometry* dtGeom = &setup.getData(esTokenDTGeom);
 
   // ----------------------------------------------------------------------
   // Digi analysis

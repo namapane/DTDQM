@@ -11,8 +11,11 @@
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include <FWCore/Framework/interface/EDAnalyzer.h>
+#include <FWCore/Framework/interface/one/EDAnalyzer.h>
 #include "FWCore/Utilities/interface/InputTag.h"
+
+#include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
+#include "TrackingTools/Records/interface/TransientTrackRecord.h"
 
 #include <string>
 #include <vector>
@@ -20,7 +23,7 @@
 
 class TFile;
 
-class MuonAnalysis: public edm::EDAnalyzer{
+class MuonAnalysis: public edm::one::EDAnalyzer<>{
 public:
   /// Constructor
   MuonAnalysis(const edm::ParameterSet& pset);
@@ -58,6 +61,8 @@ private:
 //   std::map<int, double> numMB3DigisPerEvent;
 
   int nEvents;
+
+  const edm::ESGetToken<TransientTrackBuilder, TransientTrackRecord> esTokenTTB;
 
 };
 #endif

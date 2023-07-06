@@ -36,8 +36,6 @@
 
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
-#include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
-#include "TrackingTools/Records/interface/TransientTrackRecord.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrack.h"
 #include <FWCore/Framework/interface/LuminosityBlock.h>
 
@@ -51,7 +49,7 @@ using namespace edm;
 using namespace std;
 using namespace reco;
 
-MuonAnalysis::MuonAnalysis(const edm::ParameterSet& pset) : nEvents(0) {
+MuonAnalysis::MuonAnalysis(const edm::ParameterSet& pset) : nEvents(0), esTokenTTB(esConsumes(edm::ESInputTag("TransientTrackBuilder"))) {
 
   debug = pset.getUntrackedParameter<bool>("debug","false");
   if(debug)
@@ -155,8 +153,10 @@ void MuonAnalysis::analyze(const edm::Event& event, const edm::EventSetup& setup
       
   
       // build the transient track
-      edm::ESHandle<TransientTrackBuilder> theTTBuilder;
-      setup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTBuilder);
+      const TransientTrackBuilder* theTTBuilder = &setup.getData(esTokenTTB);
+//       edm::ESHandle<TransientTrackBuilder> theTTBuilder;
+//       setup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTBuilder);
+
       TransientTrack transTrack;
   
       if(recoMu->isGlobalMuon())

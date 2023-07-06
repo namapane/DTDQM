@@ -19,7 +19,13 @@
  */
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 #include "DataFormats/MuonDetId/interface/DTSuperLayerId.h"
+#include "Geometry/DTGeometry/interface/DTGeometry.h"
+#include "Geometry/Records/interface/MuonGeometryRecord.h"
+#include "CondFormats/DataRecord/interface/DTStatusFlagRcd.h"
+#include "CondFormats/DTObjects/interface/DTStatusFlag.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 
 #include <string>
 #include <vector>
@@ -32,7 +38,7 @@ class TH1F;
 class DTResolutionAnalysis {
 public:
   /// Constructor
-  DTResolutionAnalysis(const edm::ParameterSet& pset, TFile* file);
+DTResolutionAnalysis(const edm::ParameterSet& pset, edm::ConsumesCollector&& cc, TFile* file);
 
   /// Destructor
   virtual ~DTResolutionAnalysis();
@@ -68,6 +74,10 @@ private:
  
   // Switch for checking of noisy channels
   bool checkNoisyChannels;
+
+  const edm::ESGetToken<DTGeometry, MuonGeometryRecord> esTokenDTGeom;
+  const edm::ESGetToken<DTStatusFlag, DTStatusFlagRcd> esTokenDTStatusMap;
+
 };
 #endif
 

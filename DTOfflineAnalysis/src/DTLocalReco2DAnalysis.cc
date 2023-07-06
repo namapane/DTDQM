@@ -46,7 +46,7 @@ DTLocalReco2DAnalysis::DTLocalReco2DAnalysis(const ParameterSet& pset) : theSegm
       new DTSegment2DAnalysis(pset.getParameter<ParameterSet>("segment2DAnalysisConfig"), theFile);
   if(doResolution2DAnalysis)
     theResolution2DAnalysis =
-      new DTResolution2DAnalysis(pset.getParameter<ParameterSet>("resolution2DAnalysisConfig"), theFile);
+      new DTResolution2DAnalysis(pset.getParameter<ParameterSet>("resolution2DAnalysisConfig"), consumesCollector(), theFile);
 }
 
 DTLocalReco2DAnalysis::~DTLocalReco2DAnalysis(){

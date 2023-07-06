@@ -48,7 +48,7 @@ DTLocalRecoAnalysis::DTLocalRecoAnalysis(const ParameterSet& pset) : theSegmentA
       new DTSegmentAnalysis(pset.getParameter<ParameterSet>("segmentAnalysisConfig"), theFile);
   if(doResolutionAnalysis)
     theResolutionAnalysis =
-      new DTResolutionAnalysis(pset.getParameter<ParameterSet>("resolutionAnalysisConfig"), theFile);
+      new DTResolutionAnalysis(pset.getParameter<ParameterSet>("resolutionAnalysisConfig"),  consumesCollector(), theFile);
   if(doTreeBuilder)
     theTreeBuilder =
       new DTTreeBuilder(pset.getParameter<ParameterSet>("treeBuilderConfig"), consumesCollector(), theFile);

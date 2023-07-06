@@ -21,6 +21,12 @@
 #include "DataFormats/MuonDetId/interface/DTSuperLayerId.h"
 #include "FWCore/Framework/interface/ConsumesCollector.h"
 
+#include "Geometry/DTGeometry/interface/DTGeometry.h"
+#include "Geometry/Records/interface/MuonGeometryRecord.h"
+#include "CondFormats/DataRecord/interface/DTStatusFlagRcd.h"
+#include "CondFormats/DTObjects/interface/DTStatusFlag.h"
+
+
 #include <string>
 #include <vector>
 #include <map>
@@ -79,6 +85,10 @@ private:
   bool checkNoisyChannels;
  // The module for t0 subtraction
   std::unique_ptr<DTTTrigBaseSync> theSync;
+
+const edm::ESGetToken<DTGeometry, MuonGeometryRecord> esTokenDTGeom;
+  const edm::ESGetToken<DTStatusFlag, DTStatusFlagRcd> esTokenDTStatusMap;
+
 };
 #endif
 

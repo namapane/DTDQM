@@ -10,7 +10,7 @@
  *
 */
 
-#include <FWCore/Framework/interface/EDAnalyzer.h>
+#include <FWCore/Framework/interface/one/EDAnalyzer.h>
 
 
 #include <string>
@@ -23,7 +23,7 @@ class DTTimeBoxAnalysis;
 class DTTimeBoxMeanTimerAnalysis;
 class TFile;
 
-class DTTimeAnalysis: public edm::EDAnalyzer{
+class DTTimeAnalysis: public edm::one::EDAnalyzer<>{
 
 public:
 

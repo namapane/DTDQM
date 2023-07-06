@@ -61,7 +61,6 @@ private:
   bool doResolutionAnalysis;
   bool doTreeBuilder;
 
-
 };
 
 #endif

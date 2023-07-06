@@ -36,7 +36,7 @@
 using namespace edm;
 using namespace std;
 
-DTTimeBoxMeanTimerAnalysis::DTTimeBoxMeanTimerAnalysis(const ParameterSet& pset, TFile* file, ConsumesCollector && cc) : theFile(file) {
+DTTimeBoxMeanTimerAnalysis::DTTimeBoxMeanTimerAnalysis(const ParameterSet& pset, TFile* file, ConsumesCollector && cc) : theFile(file), esTokenDTGeom(cc.esConsumes()),esTokenDTStatusMap(cc.esConsumes()) {
   debug = pset.getUntrackedParameter<bool>("debug","false");
   // the name of the 4D rec hits collection
   theRecHits4DLabel = pset.getParameter<string>("recHits4DLabel");
@@ -72,15 +72,14 @@ void DTTimeBoxMeanTimerAnalysis::analyze(const Event& event, const EventSetup& s
   event.getByLabel(theRecHitLabel, dtRecHits);
 
   // Get the DT Geometry
-  ESHandle<DTGeometry> dtGeom;
-  setup.get<MuonGeometryRecord>().get(dtGeom);
-  
+  const DTGeometry* dtGeom = &setup.getData(esTokenDTGeom);
+
   // Get the map of noisy channels
-  ESHandle<DTStatusFlag> statusMap;
+  const DTStatusFlag* statusMap = nullptr;
   if(checkNoisyChannels) {
-    setup.get<DTStatusFlagRcd>().get(statusMap);
-    }
-  
+    statusMap = &setup.getData(esTokenDTStatusMap);
+  }
+
   if(doSubtractT0)
     theSync->setES(setup);
 

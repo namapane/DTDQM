@@ -11,8 +11,10 @@
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include <FWCore/Framework/interface/EDAnalyzer.h>
+#include <FWCore/Framework/interface/one/EDAnalyzer.h>
 #include "FWCore/Utilities/interface/InputTag.h"
+#include "Geometry/DTGeometry/interface/DTGeometry.h"
+#include "Geometry/Records/interface/MuonGeometryRecord.h"
 
 #include <string>
 #include <vector>
@@ -21,7 +23,7 @@
 class HistoStationOccupancy;
 class TFile;
 
-class DTOfflineOccupancy: public edm::EDAnalyzer{
+class DTOfflineOccupancy: public edm::one::EDAnalyzer<>{
 public:
   /// Constructor
   DTOfflineOccupancy(const edm::ParameterSet& pset);
@@ -84,6 +86,7 @@ private:
   int nEvents;
   std::string mode;
 
+  const edm::ESGetToken<DTGeometry, MuonGeometryRecord> esTokenDTGeom;
 };
 #endif
 

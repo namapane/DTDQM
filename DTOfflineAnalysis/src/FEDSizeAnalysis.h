@@ -10,7 +10,7 @@
  */
 
 
-#include <FWCore/Framework/interface/EDAnalyzer.h>
+#include <FWCore/Framework/interface/one/EDAnalyzer.h>
 #include "FWCore/Utilities/interface/InputTag.h"
 
 #include <string>
@@ -20,7 +20,7 @@ class TFile;
 class TNtuple;
 
 
-class FEDSizeAnalysis : public edm::EDAnalyzer {
+class FEDSizeAnalysis : public edm::one::EDAnalyzer<> {
 public:
   /// Constructor
   FEDSizeAnalysis(const edm::ParameterSet& pset);

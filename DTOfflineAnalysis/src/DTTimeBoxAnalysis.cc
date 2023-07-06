@@ -20,13 +20,7 @@
 
 #include "CondFormats/DTObjects/interface/DTTtrig.h"
 
-#include "DataFormats/GeometryVector/interface/GlobalPoint.h" 
-
-
-#include "Geometry/DTGeometry/interface/DTGeometry.h"
-#include "Geometry/Records/interface/MuonGeometryRecord.h"
-#include "CondFormats/DataRecord/interface/DTStatusFlagRcd.h"
-#include "CondFormats/DTObjects/interface/DTStatusFlag.h"
+#include "DataFormats/GeometryVector/interface/GlobalPoint.h"
 
 #include "TFile.h"
 #include "TH1F.h"
@@ -40,7 +34,8 @@ using namespace edm;
 
 
 // Constructor
-DTTimeBoxAnalysis::DTTimeBoxAnalysis(const edm::ParameterSet& pset, TFile* file, ConsumesCollector && cc) : theFile(file) {
+DTTimeBoxAnalysis::DTTimeBoxAnalysis(const edm::ParameterSet& pset, TFile* file, ConsumesCollector && cc) : theFile(file), esTokenDTGeom(cc.esConsumes()),esTokenDTStatusMap(cc.esConsumes())
+{
   // Get the debug parameter for verbose output
   debug = pset.getUntrackedParameter<bool>("debug");
 
@@ -97,15 +92,13 @@ void DTTimeBoxAnalysis::analyze(const edm::Event & event, const edm::EventSetup&
   Handle<DTDigiCollection> digis; 
   event.getByLabel(digiLabel, digis);
   
-  ESHandle<DTStatusFlag> statusMap;
+  // Get the map of noisy channels
+  const DTStatusFlag* statusMap = nullptr;
   if(checkNoisyChannels) {
-    // Get the map of noisy channels
-    eventSetup.get<DTStatusFlagRcd>().get(statusMap);
-    }
-
+    statusMap = &eventSetup.getData(esTokenDTStatusMap);
+  }
   // Get the DT Geometry
-  ESHandle<DTGeometry> dtGeom;
-  eventSetup.get<MuonGeometryRecord>().get(dtGeom);
+  const DTGeometry* dtGeom = &eventSetup.getData(esTokenDTGeom);
 
   if(doSubtractT0)
     theSync->setES(eventSetup);

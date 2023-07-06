@@ -10,8 +10,7 @@
  *
 */
 
-#include <FWCore/Framework/interface/EDAnalyzer.h>
-
+#include <FWCore/Framework/interface/one/EDAnalyzer.h>
 
 #include <string>
 
@@ -23,7 +22,7 @@ class DTSegment2DAnalysis;
 class DTResolution2DAnalysis;
 class TFile;
 
-class DTLocalReco2DAnalysis: public edm::EDAnalyzer{
+class DTLocalReco2DAnalysis: public edm::one::EDAnalyzer<>{
 
 public:
 

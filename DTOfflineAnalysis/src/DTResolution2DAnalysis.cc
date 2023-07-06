@@ -14,19 +14,12 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/Framework/interface/ESHandle.h"
-// #include "Geometry/Vector/interface/Pi.h"
 
 #include "DataFormats/DTRecHit/interface/DTRecSegment2DCollection.h"
 #include "DataFormats/DTRecHit/interface/DTRecHitCollection.h"
 
-#include "Geometry/DTGeometry/interface/DTGeometry.h"
-#include "Geometry/Records/interface/MuonGeometryRecord.h"
-
 #include "CalibMuon/DTDigiSync/interface/DTTTrigSyncFactory.h"
 #include "CalibMuon/DTDigiSync/interface/DTTTrigBaseSync.h"
-#include "CondFormats/DataRecord/interface/DTStatusFlagRcd.h"
-#include "CondFormats/DTObjects/interface/DTStatusFlag.h"
 
 #include <iterator>
 #include <vector>
@@ -36,7 +29,7 @@
 using namespace edm;
 using namespace std;
 
-DTResolution2DAnalysis::DTResolution2DAnalysis(const ParameterSet& pset, TFile* file) : theFile(file) {
+DTResolution2DAnalysis::DTResolution2DAnalysis(const ParameterSet& pset, ConsumesCollector&& cc, TFile* file) : theFile(file),esTokenDTGeom(cc.esConsumes()),esTokenDTStatusMap(cc.esConsumes()) {
   debug = pset.getUntrackedParameter<bool>("debug","false");
   // the name of the 4D rec hits collection
   theRecHits2DLabel = pset.getParameter<string>("recHits2DLabel");
@@ -63,15 +56,13 @@ void DTResolution2DAnalysis::analyze(const Event& event, const EventSetup& setup
   event.getByLabel(theRecHitLabel, dtRecHits);
 
   // Get the DT Geometry
-  ESHandle<DTGeometry> dtGeom;
-  setup.get<MuonGeometryRecord>().get(dtGeom);
+  const DTGeometry* dtGeom = &setup.getData(esTokenDTGeom);
   
   // Get the map of noisy channels
-  ESHandle<DTStatusFlag> statusMap;
+  const DTStatusFlag* statusMap = nullptr;
   if(checkNoisyChannels) {
-    setup.get<DTStatusFlagRcd>().get(statusMap);
-    }
-  
+    statusMap = &setup.getData(esTokenDTStatusMap);
+  }
 
   DTRecSegment2DCollection::id_iterator slId;
   for (slId = segment2Ds->id_begin();

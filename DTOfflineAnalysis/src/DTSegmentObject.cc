@@ -77,7 +77,8 @@ DTSegmentObject::DTSegmentObject(int wheel, int station, int sector) : wheel(whe
   availableHits = new TClonesArray("DTHitObject");
 }
 
-DTSegmentObject::DTSegmentObject(const DTSegmentObject& segmObj) : wheel(segmObj.wheel),
+DTSegmentObject::DTSegmentObject(const DTSegmentObject& segmObj) : TObject(segmObj),
+                                                                   wheel(segmObj.wheel),
 								   station(segmObj.station),
 								   sector(segmObj.sector),
 								   proj(segmObj.proj),

@@ -11,11 +11,15 @@
  *  \author G. Cerminara - INFN Torino
  */
 
-#include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "FWCore/Framework/interface/one/EDAnalyzer.h"
 #include "DataFormats/MuonDetId/interface/DTSuperLayerId.h"
 #include "DataFormats/MuonDetId/interface/DTLayerId.h"
 #include "FWCore/Framework/interface/ConsumesCollector.h"
 
+#include "Geometry/DTGeometry/interface/DTGeometry.h"
+#include "Geometry/Records/interface/MuonGeometryRecord.h"
+#include "CondFormats/DataRecord/interface/DTStatusFlagRcd.h"
+#include "CondFormats/DTObjects/interface/DTStatusFlag.h"
 
 #include <string>
 #include <map>
@@ -80,6 +84,8 @@ private:
   // The module for t0 subtraction
   std::unique_ptr<DTTTrigBaseSync> theSync;
 
+  const edm::ESGetToken<DTGeometry, MuonGeometryRecord> esTokenDTGeom;
+  const edm::ESGetToken<DTStatusFlag, DTStatusFlagRcd> esTokenDTStatusMap;
 };
 #endif
 

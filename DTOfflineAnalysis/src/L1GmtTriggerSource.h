@@ -11,13 +11,13 @@
 
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "FWCore/Framework/interface/one/EDAnalyzer.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 
 class HBxDistance;
 class TFile;
 
-class L1GmtTriggerSource : public edm::EDAnalyzer {
+class L1GmtTriggerSource : public edm::one::EDAnalyzer<> {
 public:
   explicit L1GmtTriggerSource(const edm::ParameterSet&);
   ~L1GmtTriggerSource();
